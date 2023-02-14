@@ -1,29 +1,37 @@
 let highScore = 0
+const highScoreBoard = document.getElementById("high-score-board")
 let game
 document.getElementById("game").addEventListener("click", e => {
-  e.stopPropagation()
-  if (!game) {
-    game = new Game(highScore)
-    const cb = () => {
-      game.animate()
-      if (game.over()) {
-        game.deathPopup()
+  if (game) {
+    game.click()
+    return
+  }
+
+  highScoreBoard.textContent = `${highScore}`
+  game = new Game(highScore)
+  let last
+  const fpsInterval = Math.floor(1000/60)
+  const stepCB = (now) => {
+    console.info(now-last, fpsInterval)
+    if (!last || now-last >= fpsInterval) {
+      game.step()
+      if (game.birdDead()) {
         if (highScore < game.score)  {
           highScore = game.score
         }
+        game.deathPopup()
         game = undefined
-      } else {
-        requestAnimationFrame(cb)
+        return
       }
+      last = now
     }
-    cb()
-  } else {
-    game.click()
+    requestAnimationFrame(stepCB)
   }
+  requestAnimationFrame(stepCB)
 })
 
 class Game {
-  constructor(highScore) {
+  constructor() {
     this.popup = document.getElementById("popup")
     this.popup.style.display = "none"
     this.sky = document.getElementById("sky")
@@ -31,14 +39,15 @@ class Game {
     this.pipeTop = document.getElementById("pipe-top")
     this.pipeBot = document.getElementById("pipe-bot")
     this.scoreBoard = document.getElementById("score-board")
-    this.scoreBoard.textContent = `0`
-    document.getElementById("high-score-board").textContent = `${highScore}`
 
     this.birdTop = this.sky.offsetHeight/2 - this.bird.offsetHeight/2 - 30
+    this.bird.style.top = `${this.birdTop}px`
     this.birdTopAccel = 0
 
-    this.pipeTop.style.height = `100px`
-    this.pipeBot.style.height = `150px`
+    this.pipeTopHeight = 100
+    this.pipeBotHeight = 150
+    this.pipeTop.style.height = `${this.pipeTopHeight}px`
+    this.pipeBot.style.height = `${this.pipeBotHeight}px`
     this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth - 5
     this.pipeTop.style.left = `${this.pipeLeft}px`
     this.pipeBot.style.left = `${this.pipeLeft}px`
@@ -50,10 +59,10 @@ class Game {
 
     this.pipePassed = false
     this.score = 0
-    this.highScore = highScore
+    this.scoreBoard.textContent = `${this.score}`
   }
 
-  animate() {
+  step() {
     this.birdTopAccel -= this.birdGravity
     if (this.birdTopAccel < -6) {
       this.birdTopAccel = -6
@@ -64,10 +73,10 @@ class Game {
     this.pipeLeft -= this.pipeVelocity
     if (this.pipeLeft < -50) {
       const gapSizeDelta = 150 - this.gapSize
-      const topHeight = randomInt(50-gapSizeDelta, 200+gapSizeDelta)
-      const botHeight = 400-this.gapSize-topHeight
-      this.pipeTop.style.height = `${topHeight}px`
-      this.pipeBot.style.height = `${botHeight}px`
+      this.pipeTopHeight = randomInt(50-gapSizeDelta, 200+gapSizeDelta)
+      this.pipeBotHeight = 400-this.gapSize-this.pipeTopHeight
+      this.pipeTop.style.height = `${this.pipeTopHeight}px`
+      this.pipeBot.style.height = `${this.pipeBotHeight}px`
       this.pipeLeft = 450
       this.pipePassed = false
     }
@@ -79,11 +88,11 @@ class Game {
         this.score += 1
         this.scoreBoard.textContent = `${this.score}`
 
-        if (this.score == 10) {
+        if (this.score === 10) {
           this.pipeVelocity += 1
-        } else if (this.score == 20) {
+        } else if (this.score === 20) {
           this.pipeVelocity += 0.5
-        } else if (this.score == 30) {
+        } else if (this.score === 30) {
           this.gapSize -= 10
         }
 
@@ -104,7 +113,7 @@ class Game {
     }
   }
 
-  over() {
+  birdDead() {
     if (this.bird.offsetHeight + this.bird.offsetTop > this.sky.offsetHeight) {
       // ground collision
       return true
