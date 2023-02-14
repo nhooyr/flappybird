@@ -35,12 +35,14 @@ body {
   width: 404px;
   box-sizing: border-box;
   padding: 10px;
+  outline: none;
 
   border: 2px solid black;
 }
 
 #help-contents {
   width: 404px;
+  height: 400px;
   box-sizing: border-box;
   position: absolute;
   z-index: 1;
@@ -48,6 +50,7 @@ body {
 
   border: 2px solid black;
   border-top: none;
+  border-bottom: none;
   font-size: 14px;
   background: white;
 }
