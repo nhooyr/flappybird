@@ -27,25 +27,29 @@ body {
   position: relative;
 
   border: 2px solid black;
+  border-top: none;
 }
 
-#help {
+#help summary {
   height: 45px;
   width: 404px;
   box-sizing: border-box;
   padding: 10px;
 
   border: 2px solid black;
-  border-bottom: none;
 }
 
 #help-contents {
-  width: 368px;
+  width: 404px;
+  box-sizing: border-box;
   position: absolute;
   z-index: 1;
   padding: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
 
   border: 2px solid black;
+  border-top: none;
   font-size: 14px;
   background: white;
 }
