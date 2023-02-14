@@ -10,8 +10,13 @@ body {
   align-items: center;
 }
 
+@media screen and (max-width: 850px) {
+  body {
+    flex-direction: column;
+  }
+}
+
 #help {
-  height: 500px;
   max-width: 350px;
   margin-right: 15px;
 }
@@ -35,12 +40,18 @@ body {
 
 #ground {
   width: 400px;
-  height: 98px;
+  height: 100px;
   position: absolute;
   top: 400px;
 
   background-color: rosybrown;
   border-top: 2px solid black;
+
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 10px;
 }
 
 #pipe-top {
@@ -87,4 +98,12 @@ body {
   background: white;
   border: 2px solid black;
   text-align: center;
+}
+
+#score-board {
+  margin: 0;
+}
+
+#high-score-board {
+  margin: 0;
 }

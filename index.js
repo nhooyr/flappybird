@@ -1,5 +1,5 @@
 let highScore = 0
-const highScoreBoard = document.getElementById("high-score-board")
+const highScoreBoard = document.getElementById("high-score-board-n")
 let game
 document.getElementById("game").addEventListener("click", e => {
   if (game) {
@@ -38,7 +38,7 @@ class Game {
     this.bird = document.getElementById("bird")
     this.pipeTop = document.getElementById("pipe-top")
     this.pipeBot = document.getElementById("pipe-bot")
-    this.scoreBoard = document.getElementById("score-board")
+    this.scoreBoard = document.getElementById("score-board-n")
 
     this.birdTop = this.sky.offsetHeight/2 - this.bird.offsetHeight/2 - 30
     this.bird.style.top = `${this.birdTop}px`
