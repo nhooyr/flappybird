@@ -12,7 +12,6 @@ document.getElementById("game").addEventListener("click", e => {
   let last
   const fpsInterval = Math.floor(1000/60)
   const stepCB = (now) => {
-    console.info(now-last, fpsInterval)
     if (!last || now-last >= fpsInterval) {
       game.step()
       if (game.birdDead()) {
