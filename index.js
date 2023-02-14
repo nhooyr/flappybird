@@ -142,7 +142,7 @@ class Game {
 
   showOverPopup() {
     this.popup.style.display = 'block'
-    this.popup.textContent = 'Game Over! Click to play again.'
+    this.popup.textContent = 'Game Over! Click or tap to play again.'
   }
 }
 
