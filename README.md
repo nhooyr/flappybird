@@ -16,3 +16,5 @@ technology that dominates our industry and thus makes for a good software starte
 And it's what they were already learning from their teacher.
 
 warning: This game is very addictive. Play at your own peril.
+
+Email me directly if you have any questions or bugs to report.
