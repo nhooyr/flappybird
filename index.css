@@ -73,6 +73,7 @@ body {
 
   display: flex;
   justify-content: space-around;
+  align-items: flex-end;
   flex-direction: column;
   box-sizing: border-box;
   padding: 10px;
