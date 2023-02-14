@@ -14,11 +14,11 @@ document.getElementById('game').addEventListener('click', () => {
   const stepCB = (now) => {
     if (!lastFrame || now - lastFrame >= fpsInterval) {
       game.step()
-      if (game.birdDead()) {
+      if (game.over()) {
         if (highScore < game.score) {
           highScore = game.score
         }
-        game.deathPopup()
+        game.showOverPopup()
         game = undefined
         return
       }
@@ -56,7 +56,7 @@ class Game {
     this.birdGravity = 0.15
     this.pipeVelocity = 2
 
-    this.pipePassed = false
+    this.pipeScored = false
     this.score = 0
     this.scoreBoard.textContent = `${this.score}`
   }
@@ -76,13 +76,13 @@ class Game {
       this.pipeBotHeight = 400 - this.gapSize - this.pipeTopHeight
       this.pipeTop.style.height = `${this.pipeTopHeight}px`
       this.pipeBot.style.height = `${this.pipeBotHeight}px`
-      this.pipeLeft = 450
-      this.pipePassed = false
+      this.pipeLeft = 400
+      this.pipeScored = false
     }
     this.pipeTop.style.left = `${this.pipeLeft}px`
     this.pipeBot.style.left = `${this.pipeLeft}px`
 
-    if (!this.pipePassed) {
+    if (!this.pipeScored) {
       if (this.bird.offsetLeft > this.pipeLeft + this.pipeTop.clientWidth) {
         this.score += 1
         this.scoreBoard.textContent = `${this.score}`
@@ -95,7 +95,7 @@ class Game {
           this.gapSize -= 10
         }
 
-        this.pipePassed = true
+        this.pipeScored = true
       }
     }
   }
@@ -112,7 +112,7 @@ class Game {
     }
   }
 
-  birdDead() {
+  over() {
     if (this.bird.offsetHeight + this.bird.offsetTop > this.sky.offsetHeight) {
       // ground collision
       return true
@@ -140,7 +140,7 @@ class Game {
     return false
   }
 
-  deathPopup() {
+  showOverPopup() {
     this.popup.style.display = 'block'
     this.popup.textContent = 'Game Over! Click to play again.'
   }
