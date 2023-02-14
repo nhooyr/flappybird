@@ -1,18 +1,18 @@
-let highScore = 0
 const highScoreBoard = document.getElementById("high-score-board-n")
+let highScore = 0
 let game
-document.getElementById("game").addEventListener("click", e => {
+document.getElementById("game").addEventListener("click", () => {
   if (game) {
     game.click()
     return
   }
 
   highScoreBoard.textContent = `${highScore}`
-  game = new Game(highScore)
-  let last
+  game = new Game()
+  let lastFrame
   const fpsInterval = Math.floor(1000/60)
   const stepCB = (now) => {
-    if (!last || now-last >= fpsInterval) {
+    if (!lastFrame || now-lastFrame >= fpsInterval) {
       game.step()
       if (game.birdDead()) {
         if (highScore < game.score)  {
@@ -22,7 +22,7 @@ document.getElementById("game").addEventListener("click", e => {
         game = undefined
         return
       }
-      last = now
+      lastFrame = now
     }
     requestAnimationFrame(stepCB)
   }
