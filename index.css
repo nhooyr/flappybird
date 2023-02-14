@@ -1,32 +1,47 @@
-body {
-  min-height: 100vh;
-  min-width: 750px;
+h4, ol, p {
   margin: 0;
-  padding: 15px;
-  box-sizing: border-box;
+}
 
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  min-height: 550px;
+  min-width: 450px;
+
+  flex-direction: column;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-@media screen and (max-width: 850px) {
-  body {
-    flex-direction: column;
-  }
-}
-
-#help {
-  max-width: 350px;
-  margin-right: 15px;
-}
-
 #game {
-  min-width: 400px;
+  width: 400px;
   height: 500px;
   position: relative;
 
   border: 2px solid black;
+}
+
+#help {
+  height: 45px;
+  width: 404px;
+  box-sizing: border-box;
+  border: 2px solid black;
+  border-bottom: none;
+  padding: 10px;
+}
+
+#help-contents {
+  position: absolute;
+  background: white;
+  z-index: 1;
+  border: 2px solid black;
+  padding: 5px;
+  width: 400px;
 }
 
 #sky {
@@ -35,7 +50,7 @@ body {
   position: absolute;
   overflow: clip;
 
-  background-color: skyblue;
+  background: skyblue;
 }
 
 #ground {
@@ -44,7 +59,7 @@ body {
   position: absolute;
   top: 400px;
 
-  background-color: rosybrown;
+  background: rosybrown;
   border-top: 2px solid black;
 
   display: flex;
@@ -60,7 +75,7 @@ body {
   position: absolute;
   left: calc(400px - 54px - 5px);
 
-  background-color: seagreen;
+  background: seagreen;
   border: 2px solid black;
   border-top: none;
 }
@@ -72,7 +87,7 @@ body {
   left: calc(400px - 54px - 5px);
   bottom: 0px;
 
-  background-color: seagreen;
+  background: seagreen;
   border: 2px solid black;
   border-bottom: none;
 }
@@ -85,7 +100,7 @@ body {
   left: calc(400px/2 - 25px/2);
 
   border: 2px solid black;
-  background-color: lightyellow;
+  background: lightyellow;
 }
 
 #popup {
@@ -100,10 +115,12 @@ body {
   text-align: center;
 }
 
-#score-board {
-  margin: 0;
+p {
+  margin-bottom: 10px;
+  line-height: 1.2;
 }
 
-#high-score-board {
-  margin: 0;
+h4 {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

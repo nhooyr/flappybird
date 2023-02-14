@@ -2,6 +2,9 @@ let highScore = 0
 const highScoreBoard = document.getElementById("high-score-board-n")
 let game
 document.getElementById("game").addEventListener("click", e => {
+  if (e.target.closest("#help")) {
+    return
+  }
   if (game) {
     game.click()
     return
