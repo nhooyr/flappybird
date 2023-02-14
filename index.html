@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./index.js" defer></script>
+    <link rel="stylesheet" href="./index.css">
+
+    <title>Flappy Bird</title>
+  </head>
+  <body>
+      <div id="help">
+        <p>
+        Simple HTML/CSS/JS demo game based on
+        <a href="https://en.wikipedia.org/wiki/Flappy_Bird">en.wikipedia.org/wiki/Flappy_Bird</a>.
+        </p>
+        <p>
+        You are the yellow square. Your goal is to jump through the pipes. You die if you
+        touch a pipe or fall to the ground.
+        </p>
+        <p>You gain a point every pipe you pass.</p>
+        <p>The game gets harder as you gain more points.</p>
+        <p>
+        The game is publicly hosted at
+        <a href="https://nhooyr.io/flappy-bird">nhooyr.io/flappy-bird</a>.
+        The source code is available at <a href="https://github.com/nhooyr/flappy-bird">github.com/nhooyr/flappy-bird</a>.
+        </p>
+        <h4>Controls</h4>
+        <ol>
+          <li><p>Click or tap to start.</p></li>
+          <li><p>Click or tap to jump through the pipes.</p></li>
+          <li><p>Click or tap to play again after dying.</p></li>
+        </ol>
+        <p>Score: <span id="score-board">0</span></p>
+        <p>High Score: <span id="high-score-board">0</span></p>
+      </div>
+    <div id="game">
+      <div id="sky">
+        <div id="bird"></div>
+        <div id="pipe-top"></div>
+        <div id="pipe-bot"></div>
+        <div id="popup">Click to start.</div>
+      </div>
+      <div id="ground"></div>
+    </div>
+  </body>
+</html>
