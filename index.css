@@ -1,4 +1,6 @@
-h4, ol, p {
+h4,
+ol,
+p {
   margin: 0;
 }
 
@@ -98,8 +100,8 @@ body {
   height: 25px;
   width: 25px;
   position: absolute;
-  top: calc(400px/2 - 25px/2 - 30px);
-  left: calc(400px/2 - 25px/2);
+  top: calc((400px / 2) - (25px / 2) - 30px);
+  left: calc((400px / 2) - (25px / 2));
 
   border: 2px solid black;
   background: lightyellow;
