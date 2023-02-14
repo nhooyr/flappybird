@@ -72,7 +72,7 @@ class Game {
     this.pipeLeft -= this.pipeVelocity
     if (this.pipeLeft < -50) {
       const gapSizeDelta = 150 - this.gapSize
-      this.pipeTopHeight = randomInt(50 - gapSizeDelta, 200 + gapSizeDelta)
+      this.pipeTopHeight = randomInt(25 - gapSizeDelta, 225 + gapSizeDelta)
       this.pipeBotHeight = 400 - this.gapSize - this.pipeTopHeight
       this.pipeTop.style.height = `${this.pipeTopHeight}px`
       this.pipeBot.style.height = `${this.pipeBotHeight}px`
@@ -88,7 +88,7 @@ class Game {
         this.scoreBoard.textContent = `${this.score}`
 
         if (this.score === 10) {
-          this.pipeVelocity += 1
+          this.pipeVelocity += 0.5
         } else if (this.score === 20) {
           this.pipeVelocity += 0.5
         } else if (this.score === 30) {
