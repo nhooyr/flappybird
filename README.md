@@ -14,3 +14,5 @@ to drive the display. This was written purely for educational purposes.
 note: This isn't an endorsement of HTML, CSS or JS. The HTML DOM just happens to be a
 technology that dominates our industry and thus makes for a good software starter toolkit.
 And it's what they were already learning from their teacher.
+
+warning: This game is very addictive. Play at your own peril.
