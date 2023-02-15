@@ -14,7 +14,9 @@ The presentation is in [./pres](./pres) and accessible at
 https://nhooyr.github.io/flappy-bird/pres/.
 
 <a href='https://nhooyr.github.io/flappy-bird/pres/'>
+  <kbd>
   <img src='./pres/pres.001.jpg' alt='Presentation Preview' width='100%'>
+  </kbd>
 </a>
 
 Rest assured that if I were to make a real game, I would use canvas and not HTML elements
