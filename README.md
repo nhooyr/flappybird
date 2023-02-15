@@ -8,6 +8,9 @@ I wrote this demo game for a short presentation I gave at the [Kaslo,
 BC](https://jvh.sd8.bc.ca/) highschool to freshmen and sophmores on how HTML, CSS and JS
 can be used to create simple web apps.
 
+The presentation is in [./pres](./pres) and accessible at
+https://nhooyr.github.io/flappy-bird/pres/
+
 Rest assured that if I were to make a real game, I would use canvas and not HTML elements
 to drive the display. This was written purely for educational purposes.
 
