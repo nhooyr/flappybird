@@ -2,13 +2,13 @@
 
 https://nhooyr.github.io/flappy-bird/
 
-<a href="https://nhooyr.github.io/flappy-bird/">
-  <img src="./ss.png" alt="Screenshot" height="600">
-</a>
-
 I wrote this demo game for a short presentation I gave at the [Kaslo,
 BC](https://jvh.sd8.bc.ca/) highschool to freshmen and sophmores on how HTML, CSS and
 JavaScript can be used to create simple web apps.
+
+<a href="https://nhooyr.github.io/flappy-bird/">
+  <img src="./ss.png" alt="Screenshot" height="600">
+</a>
 
 ## Presentation
 
