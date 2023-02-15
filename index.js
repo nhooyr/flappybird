@@ -11,19 +11,16 @@ function init() {
   // Register Space to substitute for clicking.
   // Register ArrowUp to substitute for clicking.
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
-      if (help.open) {
-        helpButton.click();
-      }
-    } else if (e.key === " ") {
-      e.preventDefault();
-      processInput();
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      processInput();
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      processInput();
+    switch (e.key) {
+      case "Escape":
+        if (help.open) {
+          helpButton.click();
+        }
+        break;
+      case ("Enter", " ", "ArrowUp"):
+        e.preventDefault();
+        processInput();
+        break;
     }
   });
 
