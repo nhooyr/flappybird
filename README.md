@@ -47,7 +47,7 @@ I did not get to them all in my short presentation but these were my discussion 
 - How the high score is persisted between page loads.
 - How the prompt is displayed and hidden.
 - How the game loop runs and handles both high refresh rates and lag.
-  - How the FPS is tracked.
+  - How the FPS meter works.
   - The interpolation equation used for calculating the next point of the bird is derived
     from the one of the core kinematics equation that they'll be learning in Junior Year
     Physics. `0.5*(v + v0)*t` to `(v0 + 0.5*vd)*t`. The derivation is in `Game.step()` in

@@ -7,21 +7,29 @@ function init() {
   const helpButton = help.children[0];
 
   // Register Escape to close help if open.
+  // Register Enter to substitute for clicking.
   // Register Space to substitute for clicking.
+  // Register ArrowUp to substitute for clicking.
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       if (help.open) {
         helpButton.click();
       }
     } else if (e.key === " ") {
-      document.body.click();
+      e.preventDefault();
+      processInput();
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      processInput();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      processInput();
     }
   });
 
-  const highScoreBoard = document.getElementById("high-score-board-n");
+  const highScoreBoard = document.getElementById("high-score-board");
   let highScore = restoreHighScoreBoard(highScoreBoard);
 
-  let game;
   document.addEventListener("click", e => {
     if (e.target === document.body) {
       // Click is to close help if help is open.
@@ -35,6 +43,11 @@ function init() {
       return;
     }
 
+    processInput();
+  });
+
+  let game;
+  const processInput = () => {
     if (game) {
       game.birdJump();
       return;
@@ -55,7 +68,7 @@ function init() {
       requestAnimationFrame(stepCB);
     };
     stepCB(performance.now());
-  });
+  };
 }
 
 function restoreHighScoreBoard(highScoreBoard) {
@@ -77,8 +90,8 @@ class Game {
     this.bird = document.getElementById("bird");
     this.pipeTop = document.getElementById("pipe-top");
     this.pipeBot = document.getElementById("pipe-bot");
-    this.scoreBoard = document.getElementById("score-board-n");
-    this.fpsBoard = document.getElementById("fps-board-n");
+    this.scoreBoard = document.getElementById("score-board");
+    this.fpsMeter = document.getElementById("fps-meter");
 
     this.birdTop = this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - 30;
     this.bird.style.top = `${this.birdTop}px`;
@@ -88,7 +101,7 @@ class Game {
     this.pipeBotHeight = 150;
     this.pipeTop.style.height = `${this.pipeTopHeight}px`;
     this.pipeBot.style.height = `${this.pipeBotHeight}px`;
-    this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth;
+    this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth + 2;
     this.pipeTop.style.left = `${this.pipeLeft}px`;
     this.pipeBot.style.left = `${this.pipeLeft}px`;
 
@@ -103,11 +116,14 @@ class Game {
     this.score = 0;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
     // Sets lastStepTime to immediately render on stepTo(now).
-    this.lastStepTime = performance.now() - Game.stepVelocity;
+    this.lastStepTime = performance.now() - Game.timeVelocity;
     this.fpsa = [];
   }
 
-  static stepVelocity = Math.floor(1000 / 60);
+  // 60 states a minute.
+  // note: This doesn't mean we render at 60 FPS. Game.step() supports rendering partial
+  // states for high refresh rate displays.
+  static timeVelocity = Math.floor(1000 / 60);
 
   stepTo(now) {
     const stepDur = now - this.lastStepTime;
@@ -124,7 +140,7 @@ class Game {
     // stepFrac by is 0.15. 0.15*0.0625 = 0.009375 which is well within the range of 64
     // bit floats and so we will never be in a situation where time is lost due to
     // stepFrac being truncated.
-    const steps = stepDur / Game.stepVelocity;
+    const steps = stepDur / Game.timeVelocity;
     const over = this.step(steps);
     if (over) {
       this.displayGameOverPrompt();
@@ -204,7 +220,7 @@ class Game {
     this.pipeTop.style.left = `${this.pipeLeft}px`;
     this.pipeBot.style.left = `${this.pipeLeft}px`;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
-    this.fpsBoard.textContent = `${this.fps()}`.padStart(3, "0");
+    this.fpsMeter.textContent = `${this.fps()}`.padStart(3, "0");
   }
 
   birdJump() {
@@ -248,7 +264,7 @@ class Game {
 
   displayGameOverPrompt() {
     this.prompt.style.display = "block";
-    this.prompt.textContent = "Game Over! Click or tap to play again.";
+    this.prompt.textContent = "Game Over! Click, enter or tap to play again.";
   }
 
   fps() {
