@@ -33,10 +33,13 @@ document.getElementById("game").addEventListener("click", () => {
 
 const help = document.getElementById("help");
 const helpButton = help.children[0];
+const gameEl = document.getElementById("game");
 document.addEventListener("click", e => {
   if (e.target === document.body) {
     if (help.open) {
       helpButton.click();
+    } else {
+      gameEl.click();
     }
   }
 });
