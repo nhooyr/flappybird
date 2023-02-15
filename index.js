@@ -1,60 +1,79 @@
 "use strict";
 
-const highScoreBoard = document.getElementById("high-score-board-n");
-let highScore = 0;
-let game;
-document.getElementById("game").addEventListener("click", () => {
-  if (game) {
-    game.click();
-    return;
-  }
+init();
 
-  highScoreBoard.textContent = `${highScore}`;
-  game = new Game();
-  let lastFrame;
-  const fpsInterval = Math.floor(1000 / 60);
-  const stepCB = now => {
-    if (!lastFrame || now - lastFrame >= fpsInterval) {
-      game.step();
-      if (game.over()) {
-        if (highScore < game.score) {
-          highScore = game.score;
-        }
-        game.showOverPopup();
-        game = undefined;
+function init() {
+  const highScoreBoard = document.getElementById("high-score-board-n");
+  let highScore = restoreHighScoreBoard(highScoreBoard);
+
+  const help = document.getElementById("help");
+  const helpButton = help.children[0];
+
+  // Register Escape to close help if open.
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      if (help.open) {
+        helpButton.click();
+      }
+    }
+  });
+
+  let game;
+  document.addEventListener("click", e => {
+    if (e.target === document.body) {
+      // Click is to close help if help is open.
+      // Otherwise it's for the game.
+      if (help.open) {
+        helpButton.click();
         return;
       }
-      lastFrame = now;
     }
-    requestAnimationFrame(stepCB);
-  };
-  requestAnimationFrame(stepCB);
-});
 
-const help = document.getElementById("help");
-const helpButton = help.children[0];
-const gameEl = document.getElementById("game");
-document.addEventListener("click", e => {
-  if (e.target === document.body) {
-    if (help.open) {
-      helpButton.click();
-    } else {
-      gameEl.click();
+    if (game) {
+      if (game.ok) {
+        game.click();
+        return;
+      }
+
+      highScore = restoreHighScoreBoard(highScoreBoard);
     }
+
+    game = new Game();
+    let lastFrame;
+    const fpsInterval = Math.floor(1000 / 60);
+    const stepCB = now => {
+      if (!lastFrame || now - lastFrame >= fpsInterval) {
+        const ok = game.step();
+        if (!ok) {
+          game.showGameOverPrompt();
+          return;
+        }
+        lastFrame = now;
+        if (highScore < game.score) {
+          localStorage.setItem("flappy-bird-high-score", game.score);
+        }
+      }
+      requestAnimationFrame(stepCB);
+    };
+    requestAnimationFrame(stepCB);
+  });
+}
+
+function restoreHighScoreBoard(highScoreBoard) {
+  let highScore = localStorage.getItem("flappy-bird-high-score");
+  if (highScore) {
+    highScoreBoard.textContent = `${highScore}`;
+    return highScore;
+  } else {
+    localStorage.setItem("flappy-bird-high-score", 0);
+    return 0;
   }
-});
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    if (help.open) {
-      helpButton.click();
-    }
-  }
-});
+}
 
 class Game {
   constructor() {
-    this.popup = document.getElementById("popup");
-    this.popup.style.display = "none";
+    this.prompt = document.getElementById("prompt");
+    this.prompt.style.display = "none";
     this.sky = document.getElementById("sky");
     this.bird = document.getElementById("bird");
     this.pipeTop = document.getElementById("pipe-top");
@@ -120,6 +139,9 @@ class Game {
         this.pipeScored = true;
       }
     }
+
+    this.ok = !this.detectBirdCollision();
+    return this.ok;
   }
 
   click() {
@@ -134,7 +156,7 @@ class Game {
     }
   }
 
-  over() {
+  detectBirdCollision() {
     if (this.bird.offsetHeight + this.bird.offsetTop > this.sky.offsetHeight) {
       // ground collision
       return true;
@@ -162,9 +184,9 @@ class Game {
     return false;
   }
 
-  showOverPopup() {
-    this.popup.style.display = "block";
-    this.popup.textContent = "Game Over! Click or tap to play again.";
+  showGameOverPrompt() {
+    this.prompt.style.display = "block";
+    this.prompt.textContent = "Game Over! Click or tap to play again.";
   }
 }
 
