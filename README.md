@@ -2,9 +2,9 @@
 
 https://nhooyr.github.io/flappy-bird/
 
-I wrote this demo game for a short presentation I gave at the [Kaslo,
-BC](https://jvh.sd8.bc.ca/) highschool to freshmen and sophmores on how HTML, CSS and
-JavaScript can be used to create simple web apps.
+I wrote this minimal demo game for a short presentation I gave at the [Kaslo, BC
+highschool](https://jvh.sd8.bc.ca/) to freshmen and sophmores in early 2023 on how HTML,
+CSS and JavaScript integrate together.
 
 <a href="https://nhooyr.github.io/flappy-bird/">
   <img src="./ss.png" alt="Screenshot" height="600">
@@ -21,8 +21,8 @@ https://nhooyr.github.io/flappy-bird/pres/.
     <img src="./pres/pres.001.jpg" alt="Presentation Preview">
   </kbd>
 </a>
-<!-- Not sure why but two br are required to separate the kbd border from below -->
-<br><br>
+<!-- Do not know why but two br are required to separate the kbd border from below -->
+<br /><br />
 
 I did not get to them all in my short presentation but these were my discussion points:
 
@@ -44,7 +44,7 @@ I did not get to them all in my short presentation but these were my discussion 
   speed, pipe gap size etc.
 - Canvas being a more performant real world option for writing games due to its GPU
   acceleration. This demo was written purely for educational purposes on how HTML, CSS and
-  JavaScript interconnect to produce web applications.
+  JavaScript integrate.
   - I have noticed a bit of lag on my 2020 amd64 13" MacBook Pro but it runs buttery smooth
     on my Samsung Galaxy Note20 Ultra at 120 Hz.
 
@@ -52,8 +52,8 @@ I did not get to them all in my short presentation but these were my discussion 
 
 This is not an endorsement of HTML, CSS or JS. The [HTML
 DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) dominates our
-industry with widespread support and thus makes for an excellent beginner application
-toolkit. Additionally, they were already learning it from their teacher.
+industry with widespread support and thus makes for an excellent beginner development
+target. Additionally, they were already learning it from their teacher.
 
 _warning_: This game is very addictive. Play at your own peril.
 
