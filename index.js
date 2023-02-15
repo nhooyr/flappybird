@@ -33,22 +33,20 @@ function init() {
     }
 
     if (game) {
-      if (!game.over) {
-        game.flap();
-        return;
-      }
-
-      highScore = restoreHighScoreBoard(highScoreBoard);
+      game.flapWings();
+      return;
     }
 
+    highScore = restoreHighScoreBoard(highScoreBoard);
     game = new Game();
     const stepCB = now => {
-      game.stepTo(now);
+      const gameOver = game.stepTo(now);
       game.render();
       if (highScore < game.score) {
         localStorage.setItem("flappy-bird-high-score", game.score);
       }
-      if (game.over) {
+      if (gameOver) {
+        game = undefined;
         return;
       }
       requestAnimationFrame(stepCB);
@@ -101,7 +99,6 @@ class Game {
     this.pipeScored = false;
     this.score = 0;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
-    this.over = false;
     // Sets lastStepTime to immediately render the next frame on the stepTo(now).
     this.lastStepTime = performance.now() - Game.stepVelocity;
     this.fpsa = [];
@@ -111,26 +108,26 @@ class Game {
 
   stepTo(now) {
     const stepDur = now - this.lastStepTime;
+    if (stepDur === 0) {
+      // Somehow we got called before a millisecond passed.
+      return;
+    }
     // The lowest this can ever be is 1/16 which is 0.0625. The lowest number we multiply
     // stepFrac by is 0.15. 0.15*0.0625 = 0.009375 which is well within the range of 64
     // bit floats and so we will never be in a situation where time is lost due to
     // stepFrac being truncated.
     const stepFrac = stepDur / Game.stepVelocity;
-    if (stepFrac === 0) {
-      // Sanity check.
-      return;
-    }
     const over = this.stepByFrac(stepFrac);
     if (over) {
-      this.over = true;
       this.displayGameOverPrompt();
-      return;
+      return true;
     }
     this.fpsa.push({ts: now, fps: 1000 / stepDur});
     while (this.fpsa.length && performance.now() - this.fpsa[0].ts > 3000) {
       this.fpsa.pop();
     }
     this.lastStepTime = now;
+    return false;
   }
 
   stepByFrac(frac) {
@@ -191,7 +188,7 @@ class Game {
     this.fpsBoard.textContent = `${this.fps()}`.padStart(3, "0");
   }
 
-  flap() {
+  flapWings() {
     if (this.birdTopVelocity > 0) {
       this.birdTopVelocity = this.birdFlapForce;
     } else {
