@@ -48,6 +48,10 @@ I did not get to them all in my short presentation but these were my discussion 
 - How the prompt is displayed and hidden.
 - How the game loop runs and handles both high refresh rates and lag.
   - How the FPS is tracked.
+  - The interpolation equation used for calculating the next point of the bird is derived
+    from the one of the core kinematics equation that they'll be learning in Junior Year
+    Physics. `0.5*(v + v0)*t` to `(v0 + 0.5*vd)*t`. The derivation is in `Game.step()` in
+    [./index.js](./index.js).
 - How to adjust attributes of the game like gravity, time, the bird's flap force, pipe
   speed, pipe gap size etc.
   - When the the 3 difficulty levels are reached and what attributes of the game they

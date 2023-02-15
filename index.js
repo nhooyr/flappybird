@@ -3,20 +3,23 @@
 init();
 
 function init() {
-  const highScoreBoard = document.getElementById("high-score-board-n");
-  let highScore = restoreHighScoreBoard(highScoreBoard);
-
   const help = document.getElementById("help");
   const helpButton = help.children[0];
 
   // Register Escape to close help if open.
+  // Register Space to substitute for clicking.
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       if (help.open) {
         helpButton.click();
       }
+    } else if (e.key === " ") {
+      document.body.click();
     }
   });
+
+  const highScoreBoard = document.getElementById("high-score-board-n");
+  let highScore = restoreHighScoreBoard(highScoreBoard);
 
   let game;
   document.addEventListener("click", e => {
@@ -33,7 +36,7 @@ function init() {
     }
 
     if (game) {
-      game.flapWings();
+      game.birdJump();
       return;
     }
 
@@ -99,7 +102,7 @@ class Game {
     this.pipeScored = false;
     this.score = 0;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
-    // Sets lastStepTime to immediately render the next frame on the stepTo(now).
+    // Sets lastStepTime to immediately render on stepTo(now).
     this.lastStepTime = performance.now() - Game.stepVelocity;
     this.fpsa = [];
   }
@@ -110,14 +113,19 @@ class Game {
     const stepDur = now - this.lastStepTime;
     if (stepDur === 0) {
       // Somehow we got called before a millisecond passed.
-      return;
+      return false;
+    }
+    if (stepDur < 0) {
+      // Time overflowed.
+      this.lastStepTime = now;
+      return false;
     }
     // The lowest this can ever be is 1/16 which is 0.0625. The lowest number we multiply
     // stepFrac by is 0.15. 0.15*0.0625 = 0.009375 which is well within the range of 64
     // bit floats and so we will never be in a situation where time is lost due to
     // stepFrac being truncated.
-    const stepFrac = stepDur / Game.stepVelocity;
-    const over = this.stepByFrac(stepFrac);
+    const steps = stepDur / Game.stepVelocity;
+    const over = this.step(steps);
     if (over) {
       this.displayGameOverPrompt();
       return true;
@@ -130,23 +138,34 @@ class Game {
     return false;
   }
 
-  stepByFrac(frac) {
-    for (; frac > 0; frac--) {
-      let fracDelta = 1;
-      if (frac < 1) {
-        fracDelta = frac;
+  // step steps n states.
+  //
+  // n can be a float in which case step will interpolate the render through a fraction
+  // of the state.
+  step(n) {
+    let interpol = 1;
+    for (let i = 0; i < n; i++) {
+      if (n - i < 1) {
+        // interpolate by the fractional remainder of n. e.g. for n = 1.5 we will step
+        // one state and then interpolate 0.5 of the next state.
+        interpol = n - i;
       }
-      let birdTopVelocityDelta = this.birdGravity * fracDelta;
+      let birdTopVelocityDelta = this.birdGravity * interpol;
       let birdTopVelocityFinal = this.birdTopVelocity + birdTopVelocityDelta;
       if (birdTopVelocityFinal > this.birdVelocityMax) {
         birdTopVelocityFinal = this.birdVelocityMax;
         birdTopVelocityDelta = this.birdVelocityMax - this.birdTopVelocity;
       }
-      this.birdTop +=
-        this.birdTopVelocity * fracDelta + 0.5 * birdTopVelocityDelta * fracDelta;
+      // https://en.wikipedia.org/wiki/Equations_of_motion#Constant_translational_acceleration_in_a_straight_line
+      // Derived from Equation 3:
+      //   = 0.5*(v + v0)*t
+      //   = 0.5*(v0 + vd + v0)*t
+      //   = 0.5*(2*v0 + vd)*t
+      //   = (v0 + 0.5*vd)*t
+      this.birdTop += (this.birdTopVelocity + 0.5 * birdTopVelocityDelta) * interpol;
       this.birdTopVelocity = birdTopVelocityFinal;
 
-      this.pipeLeft -= this.pipeLeftVelocity * fracDelta;
+      this.pipeLeft -= this.pipeLeftVelocity * interpol;
       if (this.pipeLeft < -50) {
         const gapSizeDelta = 150 - this.gapSize;
         this.pipeTopHeight = randomInt(25 - gapSizeDelta, 225 + gapSizeDelta);
@@ -188,7 +207,7 @@ class Game {
     this.fpsBoard.textContent = `${this.fps()}`.padStart(3, "0");
   }
 
-  flapWings() {
+  birdJump() {
     if (this.birdTopVelocity > 0) {
       this.birdTopVelocity = this.birdFlapForce;
     } else {
