@@ -50,7 +50,7 @@ I did not get to them all in my short presentation but these were my discussion 
 
 ## Footer
 
-This is not an endorsement of HTML, CSS or JS. The [HTML
+This is not an endorsement of HTML, CSS or JavaScript. The [HTML
 DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) dominates our
 industry with widespread support and thus makes for an excellent beginner development
 target. Additionally, they were already learning it from their teacher.
