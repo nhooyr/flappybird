@@ -1,3 +1,5 @@
+'use strict';
+
 const highScoreBoard = document.getElementById('high-score-board-n');
 let highScore = 0;
 let game;

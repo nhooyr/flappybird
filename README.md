@@ -1,4 +1,4 @@
-# flappy-bird <img style='vertical-align: middle' alt='favicon' src='./favicon.jpg' width='32' height='32'>
+# flappy-bird <img src='./favicon.jpg' alt='favicon' width='32' height='32' style='vertical-align: middle'>
 
 https://nhooyr.github.io/flappy-bird/
 
