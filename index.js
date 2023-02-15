@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const highScoreBoard = document.getElementById('high-score-board-n');
+const highScoreBoard = document.getElementById("high-score-board-n");
 let highScore = 0;
 let game;
-document.getElementById('game').addEventListener('click', () => {
+document.getElementById("game").addEventListener("click", () => {
   if (game) {
     game.click();
     return;
@@ -31,17 +31,17 @@ document.getElementById('game').addEventListener('click', () => {
   requestAnimationFrame(stepCB);
 });
 
-const help = document.getElementById('help');
+const help = document.getElementById("help");
 const helpButton = help.children[0];
-document.addEventListener('click', e => {
+document.addEventListener("click", e => {
   if (e.target === document.body) {
     if (help.open) {
       helpButton.click();
     }
   }
 });
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
     if (help.open) {
       helpButton.click();
     }
@@ -50,13 +50,13 @@ document.addEventListener('keydown', e => {
 
 class Game {
   constructor() {
-    this.popup = document.getElementById('popup');
-    this.popup.style.display = 'none';
-    this.sky = document.getElementById('sky');
-    this.bird = document.getElementById('bird');
-    this.pipeTop = document.getElementById('pipe-top');
-    this.pipeBot = document.getElementById('pipe-bot');
-    this.scoreBoard = document.getElementById('score-board-n');
+    this.popup = document.getElementById("popup");
+    this.popup.style.display = "none";
+    this.sky = document.getElementById("sky");
+    this.bird = document.getElementById("bird");
+    this.pipeTop = document.getElementById("pipe-top");
+    this.pipeBot = document.getElementById("pipe-bot");
+    this.scoreBoard = document.getElementById("score-board-n");
 
     this.birdTop = this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - 30;
     this.bird.style.top = `${this.birdTop}px`;
@@ -160,8 +160,8 @@ class Game {
   }
 
   showOverPopup() {
-    this.popup.style.display = 'block';
-    this.popup.textContent = 'Game Over! Click or tap to play again.';
+    this.popup.style.display = "block";
+    this.popup.textContent = "Game Over! Click or tap to play again.";
   }
 }
 

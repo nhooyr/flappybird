@@ -15,7 +15,7 @@ https://nhooyr.github.io/flappy-bird/pres/.
 
 <a href='https://nhooyr.github.io/flappy-bird/pres/'>
   <kbd>
-  <img src='./pres/pres.001.jpg' alt='Presentation Preview' width='100%'>
+    <img src='./pres/pres.001.jpg' alt='Presentation Preview'>
   </kbd>
 </a>
 
