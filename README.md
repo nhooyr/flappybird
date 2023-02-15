@@ -14,6 +14,7 @@ The presentation is in [./pres](./pres) and accessible at
 https://nhooyr.github.io/flappy-bird/pres/.
 
 <a href='https://nhooyr.github.io/flappy-bird/pres/'>
+  <!-- kbd is for adding a border around the preview. -->
   <kbd>
     <img src='./pres/pres.001.jpg' alt='Presentation Preview'>
   </kbd>
