@@ -55,6 +55,6 @@ DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) dom
 industry with widespread support and thus makes for an excellent beginner development
 target. Additionally, they were already learning it from their teacher.
 
-_warning_: This game is very addictive. Play at your own peril.
+\*warning\*: This game is very addictive. Play at your own peril.
 
 Email me directly if you have any questions or bugs to report.
