@@ -1,8 +1,8 @@
-# flappy-bird <img src='./favicon.jpg' alt='favicon' width='32' height='32' style='vertical-align: middle'>
+# flappy-bird <img src='./favicon.jpg' alt='Favicon' width='32' height='32' style='vertical-align: middle'>
 
 https://nhooyr.github.io/flappy-bird/
 
-![screenshot](./ss.png)
+<img src='./ss.png' alt='Screenshot' height='600'>
 
 I wrote this demo game for a short presentation I gave at the [Kaslo,
 BC](https://jvh.sd8.bc.ca/) highschool to freshmen and sophmores on how HTML, CSS and JS
@@ -10,6 +10,8 @@ can be used to create simple web apps.
 
 The presentation is in [./pres](./pres) and accessible at
 https://nhooyr.github.io/flappy-bird/pres/.
+
+<img src='./pres/pres.001.jpg' alt='First Slide' width='100%'>
 
 Rest assured that if I were to make a real game, I would use canvas and not HTML elements
 to drive the display. This was written purely for educational purposes.
