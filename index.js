@@ -39,25 +39,15 @@ function init() {
     }
 
     game = new Game();
-    let lastFrame;
-    const stepInterval = Math.floor(1000 / 60);
     const stepCB = now => {
-      // In the future we should step according to the duration elapsed since the last render.
-      // This will allow us to render at high FPS on high FPS displays and also allow stepping
-      // through multiple frames in one call to render accurately on slow machines.
-      // Too complicated for students learning programming for the first time though.
-      if (!lastFrame || now - lastFrame >= stepInterval) {
-        lastFrame = now;
-        const ok = game.step();
-        if (!ok) {
-          game.showGameOverPrompt();
-          return;
-        }
-        if (highScore < game.score) {
-          localStorage.setItem("flappy-bird-high-score", game.score);
-        }
+      const ok = game.stepTo(now);
+      if (!ok) {
+        return;
       }
-
+      game.render();
+      if (highScore < game.score) {
+        localStorage.setItem("flappy-bird-high-score", game.score);
+      }
       requestAnimationFrame(stepCB);
     };
     requestAnimationFrame(stepCB);
@@ -109,48 +99,84 @@ class Game {
     this.score = 0;
     this.scoreBoard.textContent = `${this.score}`;
     this.ok = true;
+    // Sets lastStepTime to immediately render the next frame on the stepTo(now).
+    this.lastStepTime = performance.now() - Game.stepVelocity;
   }
 
-  step() {
-    this.birdTopVelocity += this.birdGravity;
-    if (this.birdTopVelocity > this.birdVelocityMax) {
-      this.birdTopVelocity = this.birdVelocityMax;
+  static stepVelocity = Math.floor(1000 / 60);
+
+  stepTo(now) {
+    const stepDur = now - this.lastStepTime;
+    const stepFrac = stepDur / Game.stepVelocity;
+    if (stepFrac === 0) {
+      // More time needs to pass.
+      return true;
     }
-    this.birdTop += this.birdTopVelocity;
-    this.bird.style.top = `${this.birdTop}px`;
-
-    this.pipeLeft -= this.pipeLeftVelocity;
-    if (this.pipeLeft < -50) {
-      const gapSizeDelta = 150 - this.gapSize;
-      this.pipeTopHeight = randomInt(25 - gapSizeDelta, 225 + gapSizeDelta);
-      this.pipeBotHeight = 400 - this.gapSize - this.pipeTopHeight;
-      this.pipeTop.style.height = `${this.pipeTopHeight}px`;
-      this.pipeBot.style.height = `${this.pipeBotHeight}px`;
-      this.pipeLeft = 400;
-      this.pipeScored = false;
+    const ok = this.stepByFrac(stepFrac);
+    if (!ok) {
+      this.displayGameOverPrompt();
+      return false;
     }
-    this.pipeTop.style.left = `${this.pipeLeft}px`;
-    this.pipeBot.style.left = `${this.pipeLeft}px`;
+    this.lastStepTime = now;
+    return true;
+  }
 
-    if (!this.pipeScored) {
-      if (this.bird.offsetLeft > this.pipeLeft + this.pipeTop.clientWidth) {
-        this.score += 1;
-        this.scoreBoard.textContent = `${this.score}`;
+  stepByFrac(frac) {
+    for (; frac > 0; frac--) {
+      let fracDelta = 1;
+      if (frac < 1) {
+        fracDelta = frac;
+      }
+      let birdTopVelocityDelta = this.birdGravity * fracDelta;
+      let birdTopVelocityFinal = this.birdTopVelocity + birdTopVelocityDelta;
+      if (birdTopVelocityFinal > this.birdVelocityMax) {
+        birdTopVelocityFinal = this.birdVelocityMax;
+        birdTopVelocityDelta = this.birdVelocityMax - this.birdTopVelocity;
+      }
+      this.birdTop +=
+        this.birdTopVelocity * fracDelta + 0.5 * birdTopVelocityDelta * fracDelta;
+      this.birdTopVelocity = birdTopVelocityFinal;
 
-        if (this.score === 10) {
-          this.pipeLeftVelocity += 0.5;
-        } else if (this.score === 20) {
-          this.pipeLeftVelocity += 0.5;
-        } else if (this.score === 30) {
-          this.gapSize -= 10;
+      this.pipeLeft -= this.pipeLeftVelocity * fracDelta;
+      if (this.pipeLeft < -50) {
+        const gapSizeDelta = 150 - this.gapSize;
+        this.pipeTopHeight = randomInt(25 - gapSizeDelta, 225 + gapSizeDelta);
+        this.pipeBotHeight = 400 - this.gapSize - this.pipeTopHeight;
+        this.pipeLeft = 400;
+        this.pipeScored = false;
+      }
+
+      if (!this.pipeScored) {
+        if (this.bird.offsetLeft > this.pipeLeft + this.pipeTop.clientWidth) {
+          this.score += 1;
+
+          if (this.score === 10) {
+            this.pipeLeftVelocity += 0.5;
+          } else if (this.score === 20) {
+            this.pipeLeftVelocity += 0.5;
+          } else if (this.score === 30) {
+            this.gapSize -= 10;
+          }
+
+          this.pipeScored = true;
         }
+      }
 
-        this.pipeScored = true;
+      if (this.detectBirdCollision()) {
+        this.ok = false;
+        return false;
       }
     }
+    return true;
+  }
 
-    this.ok = !this.detectBirdCollision();
-    return this.ok;
+  render() {
+    this.bird.style.top = `${this.birdTop}px`;
+    this.pipeTop.style.height = `${this.pipeTopHeight}px`;
+    this.pipeBot.style.height = `${this.pipeBotHeight}px`;
+    this.pipeTop.style.left = `${this.pipeLeft}px`;
+    this.pipeBot.style.left = `${this.pipeLeft}px`;
+    this.scoreBoard.textContent = `${this.score}`;
   }
 
   flap() {
@@ -192,7 +218,7 @@ class Game {
     return false;
   }
 
-  showGameOverPrompt() {
+  displayGameOverPrompt() {
     this.prompt.style.display = "block";
     this.prompt.textContent = "Game Over! Click or tap to play again.";
   }
