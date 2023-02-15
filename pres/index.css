@@ -1,5 +1,9 @@
+html {
+  height: 100%;
+}
+
 body {
-  height: 100vh;
+  height: 100%;
   margin: 0;
   display: flex;
   justify-content: center;

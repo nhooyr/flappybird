@@ -12,6 +12,18 @@ document.addEventListener("click", () => {
   next();
 });
 
+let doubleTouch;
+document.addEventListener("touchstart", e => {
+  doubleTouch = e.touches.length > 1;
+});
+
+document.addEventListener("touchend", e => {
+  if (doubleTouch) {
+    prev();
+    doubleTouch = false;
+  }
+});
+
 document.addEventListener("contextmenu", e => {
   e.preventDefault();
   prev();
