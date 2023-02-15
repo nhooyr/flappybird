@@ -31,7 +31,7 @@ function init() {
 
     if (game) {
       if (game.ok) {
-        game.click();
+        game.flap();
         return;
       }
 
@@ -40,19 +40,24 @@ function init() {
 
     game = new Game();
     let lastFrame;
-    const fpsInterval = Math.floor(1000 / 60);
+    const stepInterval = Math.floor(1000 / 60);
     const stepCB = now => {
-      if (!lastFrame || now - lastFrame >= fpsInterval) {
+      // In the future we should step according to the duration elapsed since the last render.
+      // This will allow us to render at high FPS on high FPS displays and also allow stepping
+      // through multiple frames in one call to render accurately on slow machines.
+      // Too complicated for students learning programming for the first time though.
+      if (!lastFrame || now - lastFrame >= stepInterval) {
+        lastFrame = now;
         const ok = game.step();
         if (!ok) {
           game.showGameOverPrompt();
           return;
         }
-        lastFrame = now;
         if (highScore < game.score) {
           localStorage.setItem("flappy-bird-high-score", game.score);
         }
       }
+
       requestAnimationFrame(stepCB);
     };
     requestAnimationFrame(stepCB);
@@ -82,7 +87,7 @@ class Game {
 
     this.birdTop = this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - 30;
     this.bird.style.top = `${this.birdTop}px`;
-    this.birdTopAccel = 0;
+    this.birdTopVelocity = 0;
 
     this.pipeTopHeight = 100;
     this.pipeBotHeight = 150;
@@ -93,24 +98,28 @@ class Game {
     this.pipeBot.style.left = `${this.pipeLeft}px`;
 
     this.gapSize = 150;
-    // Path of the parabola 0.075*x^2.
+    // Path of the parabola -0.075*x^2.
     this.birdGravity = 0.15;
-    this.pipeVelocity = 2;
+    this.birdVelocityMax = 6;
+    // Path of the parabola 2*x^2.
+    this.birdFlapForce = -4;
+    this.pipeLeftVelocity = 2;
 
     this.pipeScored = false;
     this.score = 0;
     this.scoreBoard.textContent = `${this.score}`;
+    this.ok = true;
   }
 
   step() {
-    this.birdTopAccel -= this.birdGravity;
-    if (this.birdTopAccel < -6) {
-      this.birdTopAccel = -6;
+    this.birdTopVelocity += this.birdGravity;
+    if (this.birdTopVelocity > this.birdVelocityMax) {
+      this.birdTopVelocity = this.birdVelocityMax;
     }
-    this.birdTop -= this.birdTopAccel;
+    this.birdTop += this.birdTopVelocity;
     this.bird.style.top = `${this.birdTop}px`;
 
-    this.pipeLeft -= this.pipeVelocity;
+    this.pipeLeft -= this.pipeLeftVelocity;
     if (this.pipeLeft < -50) {
       const gapSizeDelta = 150 - this.gapSize;
       this.pipeTopHeight = randomInt(25 - gapSizeDelta, 225 + gapSizeDelta);
@@ -129,9 +138,9 @@ class Game {
         this.scoreBoard.textContent = `${this.score}`;
 
         if (this.score === 10) {
-          this.pipeVelocity += 0.5;
+          this.pipeLeftVelocity += 0.5;
         } else if (this.score === 20) {
-          this.pipeVelocity += 0.5;
+          this.pipeLeftVelocity += 0.5;
         } else if (this.score === 30) {
           this.gapSize -= 10;
         }
@@ -144,15 +153,14 @@ class Game {
     return this.ok;
   }
 
-  click() {
-    if (this.birdTopAccel < 0) {
-      // Path of the parabola 2*x^2.
-      this.birdTopAccel = 4;
+  flap() {
+    if (this.birdTopVelocity > 0) {
+      this.birdTopVelocity = this.birdFlapForce;
     } else {
-      this.birdTopAccel += 4;
+      this.birdTopVelocity += this.birdFlapForce;
     }
-    if (this.birdTopAccel > 6) {
-      this.birdTopAccel = 6;
+    if (this.birdTopVelocity < -this.birdVelocityMax) {
+      this.birdTopVelocity = -this.birdVelocityMax;
     }
   }
 
