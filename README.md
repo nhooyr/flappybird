@@ -9,7 +9,8 @@ CSS and JavaScript integrate together.
 > \*warning\*: This game is very addictive. Play at your own peril.
 
 <a href="https://nhooyr.github.io/flappy-bird/">
-  <img src="./ss.png" alt="Screenshot" height="600">
+  <img src="./ss-light.png" alt="Screenshot" width="49%">
+  <img src="./ss-dark.png" alt="Screenshot" width="49%">
 </a>
 
 ## Presentation
