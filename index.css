@@ -4,13 +4,10 @@ p {
   margin: 0;
 }
 
-html {
-  height: 100%;
-  font-family: sans-serif;
-}
-
 body {
-  height: 100%;
+  font-family: sans-serif;
+
+  height: 100vh;
   margin: 0;
   min-height: 550px;
   min-width: 404px;
