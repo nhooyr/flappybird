@@ -28,6 +28,9 @@ function init() {
         return;
       }
     }
+    if (e.target === helpButton) {
+      return;
+    }
 
     if (game) {
       if (game.ok) {
