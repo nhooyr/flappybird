@@ -1,5 +1,13 @@
 "use strict";
 
+console.info(`Help:
+- Press -> for next slide.
+- Press <- for previous slide.
+- Click for next slide.
+- Right click for previous slide.
+- Tap for next slide.
+- Two finger tap for previous slide.`);
+
 document.addEventListener("keydown", e => {
   if (e.key === "ArrowRight") {
     next();

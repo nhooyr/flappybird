@@ -17,6 +17,8 @@ CSS and JavaScript integrate together.
 The presentation is in [./pres](./pres) and accessible at
 https://nhooyr.github.io/flappy-bird/pres/.
 
+See the message printed in the console for usage instructions.
+
 <a href="https://nhooyr.github.io/flappy-bird/pres/" >
   <!-- kbd is for adding a border around the preview. -->
   <kbd>
