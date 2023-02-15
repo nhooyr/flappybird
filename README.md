@@ -17,7 +17,7 @@ CSS and JavaScript integrate together.
 The presentation is in [./pres](./pres) and accessible at
 https://nhooyr.github.io/flappy-bird/pres/.
 
-See the message printed in the console for usage instructions.
+See the help log in the console for how to navigate between the slides.
 
 <a href="https://nhooyr.github.io/flappy-bird/pres/" >
   <!-- kbd is for adding a border around the preview. -->
@@ -31,12 +31,12 @@ See the message printed in the console for usage instructions.
 I did not get to them all in my short presentation but these were my discussion points:
 
 - The HTML structure.
+  - The details HTML element for collapsible help which is relatively unknown method for
+    providing expandable information without javascript.
 - How the CSS works to position the elements and keep the game centered.
   Including on mobile.
-- Why I only used a CSS class once.
+  - Why I only used a CSS class once.
 - How input is received and processed.
-- The details HTML element for collapsible help which is relatively unknown method for
-  providing expandable information without javascript.
 - The bird falling from gravity in the shape of a parabola. Very relevant to them as they
   are learning (or going to be) about parabolas. Of the form `-0.075*x^2`. Kids always
   question if abstract math useful and here is an excellent example!
