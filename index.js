@@ -33,7 +33,7 @@ function init() {
     }
 
     if (game) {
-      if (game.ok) {
+      if (!game.over) {
         game.flap();
         return;
       }
@@ -43,17 +43,17 @@ function init() {
 
     game = new Game();
     const stepCB = now => {
-      const ok = game.stepTo(now);
-      if (!ok) {
-        return;
-      }
+      game.stepTo(now);
       game.render();
       if (highScore < game.score) {
         localStorage.setItem("flappy-bird-high-score", game.score);
       }
+      if (game.over) {
+        return;
+      }
       requestAnimationFrame(stepCB);
     };
-    requestAnimationFrame(stepCB);
+    stepCB(performance.now());
   });
 }
 
@@ -101,29 +101,36 @@ class Game {
     this.pipeScored = false;
     this.score = 0;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
-    this.ok = true;
+    this.over = false;
     // Sets lastStepTime to immediately render the next frame on the stepTo(now).
     this.lastStepTime = performance.now() - Game.stepVelocity;
-    this.fps = 0;
+    this.fpsa = [];
   }
 
   static stepVelocity = Math.floor(1000 / 60);
 
   stepTo(now) {
     const stepDur = now - this.lastStepTime;
+    // The lowest this can ever be is 1/16 which is 0.0625. The lowest number we multiply
+    // stepFrac by is 0.15. 0.15*0.0625 = 0.009375 which is well within the range of 64
+    // bit floats and so we will never be in a situation where time is lost due to
+    // stepFrac being truncated.
     const stepFrac = stepDur / Game.stepVelocity;
     if (stepFrac === 0) {
-      // More time needs to pass.
-      return true;
+      // Sanity check.
+      return;
     }
-    const ok = this.stepByFrac(stepFrac);
-    if (!ok) {
+    const over = this.stepByFrac(stepFrac);
+    if (over) {
+      this.over = true;
       this.displayGameOverPrompt();
-      return false;
+      return;
     }
-    this.fps = Math.floor(1000 / stepDur);
+    this.fpsa.push({ts: now, fps: 1000 / stepDur});
+    while (this.fpsa.length && performance.now() - this.fpsa[0].ts > 1000) {
+      this.fpsa.pop();
+    }
     this.lastStepTime = now;
-    return true;
   }
 
   stepByFrac(frac) {
@@ -168,11 +175,10 @@ class Game {
       }
 
       if (this.detectBirdCollision()) {
-        this.ok = false;
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   render() {
@@ -182,7 +188,7 @@ class Game {
     this.pipeTop.style.left = `${this.pipeLeft}px`;
     this.pipeBot.style.left = `${this.pipeLeft}px`;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
-    this.fpsBoard.textContent = `${this.fps}`.padStart(3, "0");
+    this.fpsBoard.textContent = `${this.fps()}`.padStart(3, "0");
   }
 
   flap() {
@@ -227,6 +233,17 @@ class Game {
   displayGameOverPrompt() {
     this.prompt.style.display = "block";
     this.prompt.textContent = "Game Over! Click or tap to play again.";
+  }
+
+  fps() {
+    if (!this.fpsa.length) {
+      return 0;
+    }
+    const fps =
+      this.fpsa.reduce((acc, el) => {
+        return acc + el.fps;
+      }, 0) / this.fpsa.length;
+    return Math.round(fps);
   }
 }
 
