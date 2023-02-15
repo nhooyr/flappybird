@@ -91,7 +91,6 @@ class Game {
     // Path of the parabola -0.075*x^2.
     this.birdGravity = 0.15;
     this.birdVelocityMax = 6;
-    // Path of the parabola 2*x^2.
     this.birdFlapForce = -4;
     this.pipeLeftVelocity = 2;
 
