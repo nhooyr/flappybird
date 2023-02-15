@@ -87,7 +87,7 @@ class Game {
     this.pipeBotHeight = 150;
     this.pipeTop.style.height = `${this.pipeTopHeight}px`;
     this.pipeBot.style.height = `${this.pipeBotHeight}px`;
-    this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth - 5;
+    this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth;
     this.pipeTop.style.left = `${this.pipeLeft}px`;
     this.pipeBot.style.left = `${this.pipeLeft}px`;
 
@@ -127,7 +127,7 @@ class Game {
       return;
     }
     this.fpsa.push({ts: now, fps: 1000 / stepDur});
-    while (this.fpsa.length && performance.now() - this.fpsa[0].ts > 1000) {
+    while (this.fpsa.length && performance.now() - this.fpsa[0].ts > 3000) {
       this.fpsa.pop();
     }
     this.lastStepTime = now;

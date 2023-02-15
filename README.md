@@ -35,6 +35,7 @@ I did not get to them all in my short presentation but these were my discussion 
     providing expandable information without javascript.
 - How the CSS works to position the elements and keep the game centered.
   Including on mobile.
+  - How dark mode works.
   - Why I only used a CSS class once.
 - How input is received and processed.
 - The bird falling from gravity in the shape of a parabola. Very relevant to them as they
