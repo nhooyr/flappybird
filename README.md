@@ -29,6 +29,7 @@ I did not get to them all in my short presentation but these were my discussion 
 - The HTML structure.
 - How the CSS works to position the elements and keep the game centered.
   Including on mobile.
+- Why I only used a CSS class once.
 - How input is received and processed.
 - The details HTML element for collapsible help which is relatively unknown method for
   providing expandable information without javascript.
@@ -40,6 +41,7 @@ I did not get to them all in my short presentation but these were my discussion 
 - How the high score is persisted between page loads.
 - How the prompt is displayed and hidden.
 - How the game loop runs and handles both high refresh rates and lag.
+  - How the FPS is tracked.
 - How to adjust attributes of the game like gravity, time, the bird's flap force, pipe
   speed, pipe gap size etc.
 - Canvas being a more performant real world option for writing games due to its GPU

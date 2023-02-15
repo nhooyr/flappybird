@@ -60,7 +60,7 @@ function init() {
 function restoreHighScoreBoard(highScoreBoard) {
   let highScore = localStorage.getItem("flappy-bird-high-score");
   if (highScore) {
-    highScoreBoard.textContent = `${highScore}`;
+    highScoreBoard.textContent = `${highScore}`.padStart(3, "0");
     return highScore;
   } else {
     localStorage.setItem("flappy-bird-high-score", 0);
@@ -77,6 +77,7 @@ class Game {
     this.pipeTop = document.getElementById("pipe-top");
     this.pipeBot = document.getElementById("pipe-bot");
     this.scoreBoard = document.getElementById("score-board-n");
+    this.fpsBoard = document.getElementById("fps-board-n");
 
     this.birdTop = this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - 30;
     this.bird.style.top = `${this.birdTop}px`;
@@ -99,10 +100,11 @@ class Game {
 
     this.pipeScored = false;
     this.score = 0;
-    this.scoreBoard.textContent = `${this.score}`;
+    this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
     this.ok = true;
     // Sets lastStepTime to immediately render the next frame on the stepTo(now).
     this.lastStepTime = performance.now() - Game.stepVelocity;
+    this.fps = 0;
   }
 
   static stepVelocity = Math.floor(1000 / 60);
@@ -119,6 +121,7 @@ class Game {
       this.displayGameOverPrompt();
       return false;
     }
+    this.fps = Math.floor(1000 / stepDur);
     this.lastStepTime = now;
     return true;
   }
@@ -178,7 +181,8 @@ class Game {
     this.pipeBot.style.height = `${this.pipeBotHeight}px`;
     this.pipeTop.style.left = `${this.pipeLeft}px`;
     this.pipeBot.style.left = `${this.pipeLeft}px`;
-    this.scoreBoard.textContent = `${this.score}`;
+    this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
+    this.fpsBoard.textContent = `${this.fps}`.padStart(3, "0");
   }
 
   flap() {

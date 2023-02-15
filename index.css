@@ -4,6 +4,11 @@ p {
   margin: 0;
 }
 
+p {
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
 html {
   height: 100%;
 }
@@ -56,6 +61,17 @@ body {
   background: white;
 }
 
+ol p {
+  margin-bottom: 5px;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: normal;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
 #sky {
   width: 400px;
   height: 400px;
@@ -73,11 +89,27 @@ body {
   border-top: 2px solid black;
 
   display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.ground-col {
+  display: flex;
+  align-items: end;
   flex-direction: column;
-  box-sizing: border-box;
   padding: 10px;
+}
+
+.ground-col p {
+  margin: 0;
+}
+
+.ground-col p span {
+  white-space: pre;
+}
+
+.ground-col p + p {
+  margin-top: 5px;
 }
 
 #pipe-top {
@@ -124,20 +156,4 @@ body {
   background: white;
   border: 2px solid black;
   text-align: center;
-}
-
-p {
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-
-ol p {
-  margin-bottom: 5px;
-}
-
-h4 {
-  font-size: 16px;
-  font-weight: normal;
-  margin-top: 15px;
-  margin-bottom: 10px;
 }
