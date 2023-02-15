@@ -6,6 +6,8 @@ I wrote this minimal demo game for a short presentation I gave at the [Kaslo, BC
 highschool](https://jvh.sd8.bc.ca/) to freshmen and sophmores in early 2023 on how HTML,
 CSS and JavaScript integrate together.
 
+\*warning\*: This game is very addictive. Play at your own peril.
+
 <a href="https://nhooyr.github.io/flappy-bird/">
   <img src="./ss.png" alt="Screenshot" height="600">
 </a>
@@ -56,7 +58,5 @@ This is not an endorsement of HTML, CSS or JavaScript. The [HTML
 DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) dominates our
 industry with widespread support and thus makes for an excellent beginner development
 target. Additionally, they were already learning it from their teacher.
-
-\*warning\*: This game is very addictive. Play at your own peril.
 
 Email me directly if you have any questions or bugs to report.
