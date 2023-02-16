@@ -1,10 +1,15 @@
-first input -> start game -> game loop.apply gravity to bird
+# This game loop is a simplified overview and inaccurate of certain
+# details of the actual game loop.
 
-game loop: {
-  input -> increase bird Y velocity
+wait input -> input -> new game -> Game Loop.apply gravity
 
-  apply gravity to bird -> move pipes left -> render
+Game Loop: {
+  input -> give bird lift
 
-  render -> no collision -> wait 16 milliseconds -> apply gravity to bird
-  render -> collision detected -> _.game over
+  apply gravity -> move bird up or down -> move pipes left -> render -> detect collision
+
+  detect collision -> no collision -> wait 16 milliseconds -> apply gravity
+  detect collision -> collision detected -> _.game over
 }
+
+game over -> wait input
