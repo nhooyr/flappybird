@@ -1,7 +1,6 @@
 "use strict";
 
 init();
-
 function init() {
   const help = document.getElementById("help");
   const helpButton = help.children[0];

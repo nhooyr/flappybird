@@ -1,6 +1,8 @@
 "use strict";
 
-console.info(`Help:
+init();
+function init() {
+  console.info(`Help:
 - Press -> for next slide.
 - Press <- for previous slide.
 - Click for next slide.
@@ -8,36 +10,11 @@ console.info(`Help:
 - Tap for next slide.
 - Two finger tap for previous slide.`);
 
-document.addEventListener("keydown", e => {
-  if (e.key === "ArrowRight") {
-    next();
-  } else if (e.key === "ArrowLeft") {
-    prev();
-  }
-});
+  initQuerySlideIndex();
+  addEventListeners();
+}
 
-document.addEventListener("click", () => {
-  next();
-});
-
-let doubleTouch;
-document.addEventListener("touchstart", e => {
-  doubleTouch = e.touches.length > 1;
-});
-
-document.addEventListener("touchend", e => {
-  if (doubleTouch) {
-    prev();
-    doubleTouch = false;
-  }
-});
-
-document.addEventListener("contextmenu", e => {
-  e.preventDefault();
-  prev();
-});
-
-function init() {
+function initQuerySlideIndex() {
   const url = new URL(location.href);
   if (url.searchParams.get("slide")) {
     let slideIndex = parseInt(url.searchParams.get("slide")) - 1;
@@ -52,7 +29,6 @@ function init() {
     replaceQuerySlideIndex(1);
   }
 }
-init();
 
 function next() {
   const visibleSlide = document.querySelector(".slide-visible");
@@ -104,4 +80,35 @@ function getElementIndex(el) {
   }
   console.info(index);
   return index + 1;
+}
+
+function addEventListeners() {
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") {
+      next();
+    } else if (e.key === "ArrowLeft") {
+      prev();
+    }
+  });
+
+  document.addEventListener("click", () => {
+    next();
+  });
+
+  let doubleTouch;
+  document.addEventListener("touchstart", e => {
+    doubleTouch = e.touches.length > 1;
+  });
+
+  document.addEventListener("touchend", e => {
+    if (doubleTouch) {
+      prev();
+      doubleTouch = false;
+    }
+  });
+
+  document.addEventListener("contextmenu", e => {
+    e.preventDefault();
+    prev();
+  });
 }
