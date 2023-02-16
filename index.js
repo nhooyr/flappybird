@@ -98,7 +98,9 @@ class Game {
 
     // Kept in sync with the CSS.
     this.birdTop = this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - 30;
-    this.birdTopVelocity = 0;
+    // Remember this is the opposite of math as the origin at the top.
+    // So negative velocity is up and positive is down.
+    this.birdVelocityY = 0;
 
     this.pipeTopHeight = 100;
     this.pipeBotHeight = 150;
@@ -106,7 +108,7 @@ class Game {
     this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth + 2;
 
     // These two are adjusted in our 3 levels.
-    this.pipeLeftVelocity = 2;
+    this.pipeVelocityX = 2;
     this.gapSize = 150;
 
     // These next four fields could all be static but I made them regular fields so that
@@ -118,7 +120,7 @@ class Game {
     this.timeUnitVelocity = Math.floor(1000 / 60);
     // Path of the parabola -0.075*x^2.
     this.birdGravity = 0.15;
-    this.birdVelocityMax = 6;
+    this.birdVelocityYMax = 6;
     this.birdFlapForce = -4;
 
     this.birdFlapInputs = [];
@@ -196,21 +198,21 @@ class Game {
   stepOne(now, interpol) {
     while (this.birdFlapInputs.length && this.birdFlapInputs[0].ts <= now) {
       this.birdFlapInputs.shift();
-      if (this.birdTopVelocity > 0) {
-        this.birdTopVelocity = this.birdFlapForce;
+      if (this.birdVelocityY > 0) {
+        this.birdVelocityY = this.birdFlapForce;
       } else {
-        this.birdTopVelocity += this.birdFlapForce;
+        this.birdVelocityY += this.birdFlapForce;
       }
-      if (this.birdTopVelocity < -this.birdVelocityMax) {
-        this.birdTopVelocity = -this.birdVelocityMax;
+      if (this.birdVelocityY < -this.birdVelocityYMax) {
+        this.birdVelocityY = -this.birdVelocityYMax;
       }
     }
 
-    let birdTopVelocityDelta = this.birdGravity * interpol;
-    let birdTopVelocityFinal = this.birdTopVelocity + birdTopVelocityDelta;
-    if (birdTopVelocityFinal > this.birdVelocityMax) {
-      birdTopVelocityFinal = this.birdVelocityMax;
-      birdTopVelocityDelta = this.birdVelocityMax - this.birdTopVelocity;
+    let birdVelocityYDelta = this.birdGravity * interpol;
+    let birdVelocityYFinal = this.birdVelocityY + birdVelocityYDelta;
+    if (birdVelocityYFinal > this.birdVelocityYMax) {
+      birdVelocityYFinal = this.birdVelocityYMax;
+      birdVelocityYDelta = this.birdVelocityYMax - this.birdVelocityY;
     }
     // https://en.wikipedia.org/wiki/Equations_of_motion#Constant_translational_acceleration_in_a_straight_line
     // Derived from Equation 3:
@@ -218,10 +220,10 @@ class Game {
     //   = 0.5*(v0 + vd + v0)*t
     //   = 0.5*(2*v0 + vd)*t
     //   = (v0 + 0.5*vd)*t
-    this.birdTop += (this.birdTopVelocity + 0.5 * birdTopVelocityDelta) * interpol;
-    this.birdTopVelocity = birdTopVelocityFinal;
+    this.birdTop += (this.birdVelocityY + 0.5 * birdVelocityYDelta) * interpol;
+    this.birdVelocityY = birdVelocityYFinal;
 
-    this.pipeLeft -= this.pipeLeftVelocity * interpol;
+    this.pipeLeft -= this.pipeVelocityX * interpol;
     if (this.pipeLeft < -50) {
       const gapSizeDelta = 150 - this.gapSize;
       this.pipeTopHeight = randomInt(25 - gapSizeDelta, 225 + gapSizeDelta);
@@ -235,9 +237,9 @@ class Game {
         this.score += 1;
 
         if (this.score === 10) {
-          this.pipeLeftVelocity += 0.5;
+          this.pipeVelocityX += 0.5;
         } else if (this.score === 20) {
-          this.pipeLeftVelocity += 0.5;
+          this.pipeVelocityX += 0.5;
         } else if (this.score === 30) {
           this.gapSize -= 10;
         }
