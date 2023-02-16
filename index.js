@@ -17,7 +17,9 @@ function init() {
           helpButton.click();
         }
         break;
-      case ("Enter", " ", "ArrowUp"):
+      case " ":
+      case "ArrowUp":
+      case "Enter":
         e.preventDefault();
         processInput();
         break;
