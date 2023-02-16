@@ -115,7 +115,7 @@ class Game {
     // students can adjust them for their own levels.
 
     // 60 time units a second.
-    // note: This doesn't mean we render at 60 FPS. Game.step() supports rendering in
+    // note: This doesn't mean we render at 60 FPS. Game._step() supports rendering in
     // between full time units for high refresh rate displays.
     this.timeUnitVelocity = Math.floor(1000 / 60);
     // Path of the parabola -0.075*x^2.
