@@ -112,7 +112,7 @@ class Game {
     this.pipeTopHeight = 100;
     this.pipeBotHeight = 150;
     // Kept in sync with the CSS.
-    this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth + 2;
+    this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth;
 
     // These two are adjusted in our 3 levels.
     this.pipeVelocityX = 2;
@@ -121,13 +121,15 @@ class Game {
     // These next four fields could all be static but I made them regular fields so that
     // students can adjust them for their own levels.
 
-    // About 60 time units a second. A time unit is the maximum duration after which a
-    // collision is checked for and the duration over which a whole velocity/acceleration
-    // unit is applied.
-    // note: This doesn't mean we render at 60 FPS. Game._step() supports rendering in
-    // between whole time units for high refresh rate displays. e.g. try setting this to
-    // 30 time units a second instead and see what effect it is.
-    this.timeUnitVelocity = Math.floor(1000 / 60);
+    // timeUnitVelocity evalutes to about 16.67 milliseconds. And so about 60 time units
+    // fit into a second. A time unit is the maximum duration after which a collision is
+    // checked for and the duration over which a whole velocity/acceleration unit is
+    // applied.
+    //
+    // note: This doesn't mean we render at 60 FPS. Game._step() renders in between whole
+    // time units for high refresh rate displays. e.g. try setting this to 30 time units a
+    // second instead and see what effect it has.
+    this.timeUnitVelocity = Math.round(Math.floor(1000 / 60) * 100) / 100;
     // Path of the parabola -0.075*x^2.
     this.birdGravity = 0.15;
     this.birdVelocityYMax = 6;
@@ -164,7 +166,12 @@ class Game {
     }
 
     if (now === this.lastStepTime) {
-      // A millisecond has not yet elapsed.
+      // A microsecond has not yet elapsed.
+      // performance.now() may be a float with whole milliseconds but has a microsecond
+      // the fractional portion too. See
+      // https://developer.mozilla.org/en-US/docs/Web/API/Performance/now. Sometimes
+      // you'll get floats with digits beyond the microsecond digits but those are just
+      // for fuzzing as described in the above docs.
       return false;
     }
     if (now < this.lastStepTime) {
@@ -186,18 +193,21 @@ class Game {
         // e.g.if now = this.timeUnitVelocity*1.5 then we will step one time unit and then
         // interpolate 0.5 of the next time unit.
         //
-        // The lowest this can ever be is 1/this.timeUnitVelocity which is 0.0625. The
-        // lowest number we multiply interpol by is 0.15 i.e gravity. 0.15*0.0625 =
-        // 0.009375 which is well within the range of 64 bit floats and so we will never
-        // be in a situation where time is lost due to interpol being truncated by the
-        // nature of bounded machine floats.
+        // The lowest this can ever be is
+        // 0.001/this.timeUnitVelocity = 0.00005998800239952009.
+        // The lowest number we multiply interpol by is 0.15 i.e gravity.
+        // 0.15*0.00005998800239952009 = .00000899820035992801 whose majority is well
+        // within the range of 64 bit floats and so we will never be in a situation where
+        // time is lost due to interpol being truncated by the bounded nature of machine
+        // floats.
         //
         // See https://en.wikipedia.org/wiki/Floating-point_arithmetic#Representable_numbers,_conversion_and_rounding
         interpol = (now - (i - this.timeUnitVelocity)) / this.timeUnitVelocity;
-        if (interpol < 0.0625) {
-          // Could occur if we go beyond millisecond resolution in the future.
-          // Or if timeUnitVelocity has been increased.
-          throw new Error(`interpol below limit of 0.0625: last: ${i}, now: ${now}`);
+        if (interpol < 0.00005998800239952009) {
+          // Could occur if we go beyond microsecond resolution in the future.
+          throw new Error(
+            `interpol factor below limit of 0.00005998800239952009: interpol: ${interpol}, last: ${i}, now: ${now}`
+          );
         }
         i = now;
       }

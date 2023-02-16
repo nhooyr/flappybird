@@ -42,7 +42,7 @@ above but rather incomplete.
 > processed by input received during them. Thus the processing for each input begins not
 > at the beginning of each time unit, but exactly as when it arrived within the unit and
 > so you will never have multiple inputs being processed exactly at once. At least at
-> millisecond resolution.
+> microsecond resolution.
 
 ## Presentation
 
@@ -102,14 +102,16 @@ in a free-form format.
 - How input is received and processed.
 - How to adjust attributes of the game like gravity, time, the bird's flap force, pipe
   speed, pipe gap size etc.
-  - When the the 3 difficulty levels are reached and what attributes of the game they
-    modify.
 - Giving them time to read the code, make adjustments, play and ask me questions in a
   free-form format.
-  - Ask them to hack in an impossibly large high score.
+  - Hack in an impossibly large high score.
   - Make the game harder.
   - Make the game easier.
   - Change the colors.
+  - Increase the maximum velocity of the bird.
+  - How many difficulty levels are there?
+    - When are they reached?
+    - What attributes of the game do they modify?
 - Best game strategies?
   - Taping space and enter at the same time for a super fast double jump.
   - Moving the bird to just below the middle after each pipe. So you can respond adequately
