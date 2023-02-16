@@ -100,14 +100,17 @@ class Game {
     this.birdTop = this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - 30;
     this.birdTopVelocity = 0;
 
-    this.gapSize = 150;
     this.pipeTopHeight = 100;
     this.pipeBotHeight = 150;
     // Kept in sync with the CSS.
     this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth + 2;
 
-    // These five next fields could all be static but I made them regular fields so
-    // that students can adjust them for their own levels.
+    // These two are adjusted in our 3 levels.
+    this.pipeLeftVelocity = 2;
+    this.gapSize = 150;
+
+    // These next four fields could all be static but I made them regular fields so that
+    // students can adjust them for their own levels.
 
     // 60 time units a minute.
     // note: This doesn't mean we render at 60 FPS. Game.step() supports rendering in
@@ -117,7 +120,6 @@ class Game {
     this.birdGravity = 0.15;
     this.birdVelocityMax = 6;
     this.birdFlapForce = -4;
-    this.pipeLeftVelocity = 2;
 
     this.birdJumps = [];
     this.pipeScored = false;
