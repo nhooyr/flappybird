@@ -42,7 +42,7 @@ above but rather incomplete.
 > processed by input received during them. Thus the processing for each input begins not
 > at the beginning of each time unit, but exactly as when it arrived within the unit and
 > so you will never have multiple inputs being processed exactly at once. At least at
-> microsecond resolution.
+> the maximum microsecond resolution of `performance.now()`.
 
 ## Presentation
 
