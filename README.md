@@ -63,6 +63,10 @@ I did not get to them all in my short presentation but these were my discussion 
     modify.
 - Giving them time to read the code, make adjustments, play and ask me questions in a
   free-form format.
+  - Ask them to hack in an impossibly large high score.
+  - Make the game harder.
+  - Make the game easier.
+  - Change the colors.
 - Canvas being a more performant real world option for writing games due to its GPU
   acceleration. This demo was written purely for educational purposes on how HTML, CSS and
   JavaScript integrate.
