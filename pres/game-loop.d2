@@ -1,12 +1,14 @@
 direction: right
-entry point -> input -> new game -> Game Loop.move elements
+entry point -> wait input -> new game
+new game -> Game Loop.move elements
+new game -> Game Loop.wait input
 
 Game Loop: {
   move elements -> detect collision
-  detect collision -> no collision -> move elements
+  detect collision -> no collision -> wait -> move elements
   detect collision -> collision detected -> _.game over
 
-  input -> give bird lift
+  wait input -> give bird lift -> wait input
 }
 
-game over -> input
+game over -> wait input
