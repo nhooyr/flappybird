@@ -26,7 +26,7 @@ function init() {
     }
   });
 
-  const highScoreBoard = document.getElementById("high-score-board");
+  const highScoreBoard = document.getElementById("high-score-board-n");
   let highScore = restoreHighScoreBoard(highScoreBoard);
 
   document.addEventListener("click", e => {
@@ -93,8 +93,8 @@ class Game {
     this.bird = document.getElementById("bird");
     this.pipeTop = document.getElementById("pipe-top");
     this.pipeBot = document.getElementById("pipe-bot");
-    this.scoreBoard = document.getElementById("score-board");
-    this.fpsMeter = document.getElementById("fps-meter");
+    this.scoreBoard = document.getElementById("score-board-n");
+    this.fpsMeter = document.getElementById("fps-meter-n");
 
     // Kept in sync with the CSS.
     this.birdTop = this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - 30;
@@ -190,7 +190,6 @@ class Game {
         return gameOver;
       }
     }
-
     this.lastStepTime = now;
     return false;
   }
@@ -299,6 +298,9 @@ class Game {
   }
 
   fps() {
+    if (this.fpsa.length < 2) {
+      return 0;
+    }
     let fpsAcc = 0;
     for (let i = 1; i < this.fpsa.length; i++) {
       fpsAcc += 1000 / (this.fpsa[i].ts - this.fpsa[i - 1].ts);

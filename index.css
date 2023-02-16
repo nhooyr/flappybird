@@ -18,7 +18,7 @@ body {
 
   height: 100%;
   margin: 0;
-  min-height: 550px;
+  min-height: 524px;
   min-width: 404px;
 
   display: flex;
@@ -29,7 +29,6 @@ body {
 
 #game {
   width: 400px;
-  min-height: 500px;
   position: relative;
 
   border: 2px solid Black;
@@ -45,10 +44,7 @@ body {
 
   border: 2px solid Black;
 
-  display: flex;
-  align-items: center;
   text-decoration: underline;
-
   cursor: pointer;
 }
 
@@ -88,13 +84,20 @@ h4 {
 
 #ground {
   width: 400px;
-  height: 100px;
+  height: 75px;
 
   border-top: 2px solid Black;
 
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: center;
+}
+
+#fps-meter {
+  height: 71px;
+  padding: 10px;
+  justify-content: end;
+  box-sizing: border-box;
 }
 
 .ground-col {
