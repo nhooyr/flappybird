@@ -118,7 +118,7 @@ h4 {
   position: absolute;
   left: calc(400px - 52px);
 
-  background: LightGreen;
+  background: ForestGreen;
   border: 2px solid Black;
   border-top: none;
 }
@@ -130,7 +130,7 @@ h4 {
   left: calc(400px - 52px);
   bottom: 0px;
 
-  background: LightGreen;
+  background: ForestGreen;
   border: 2px solid Black;
   border-bottom: none;
 }
@@ -185,22 +185,20 @@ h4 {
     border-color: White;
   }
   #sky {
-    background: DeepSkyBlue;
+    background: DarkSlateBlue;
   }
   #ground {
     background: Black;
     border-color: White;
   }
   #pipe-top {
-    background: ForestGreen;
     border-color: White;
   }
   #pipe-bot {
-    background: ForestGreen;
     border-color: White;
   }
   #bird {
-    background: HotPink;
+    background: LightCoral;
     border-color: White;
   }
   #prompt {
