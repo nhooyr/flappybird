@@ -118,7 +118,7 @@ h4 {
   position: absolute;
   left: calc(400px - 52px);
 
-  background: ForestGreen;
+  background: MediumAquamarine;
   border: 2px solid Black;
   border-top: none;
 }
@@ -130,7 +130,7 @@ h4 {
   left: calc(400px - 52px);
   bottom: 0px;
 
-  background: ForestGreen;
+  background: MediumAquamarine;
   border: 2px solid Black;
   border-bottom: none;
 }
@@ -192,11 +192,11 @@ h4 {
     border-color: White;
   }
   #pipe-top {
-    background: DarkGreen;
+    background: LightSeaGreen;
     border-color: White;
   }
   #pipe-bot {
-    background: DarkGreen;
+    background: LightSeaGreen;
     border-color: White;
   }
   #bird {
