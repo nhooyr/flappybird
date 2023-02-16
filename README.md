@@ -6,7 +6,7 @@ I wrote this minimal demo game for a short presentation I gave at the [Kaslo, BC
 highschool](https://jvh.sd8.bc.ca/) to freshmen and sophmores in early 2023 on how HTML,
 CSS and JavaScript integrate together.
 
-> \*warning\*: This game is very addictive. Play at your own peril.
+> \*warning\*: This game is deathly addictive. Play at your own peril.
 
 <a href="https://nhooyr.github.io/flappybird/">
   <img src="./ss-light.png" alt="Screenshot" width="49%" height="528px">
