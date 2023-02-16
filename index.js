@@ -239,12 +239,10 @@ class Game {
         durSinceLastStep = timeUnitInputs[i].ts - timeUnitInputs[i - 1].ts;
       }
       const interpol2 = durSinceLastStep / this.timeUnitVelocity;
-      if (interpol2 > 0) {
-        interpol -= interpol2;
-        const gameOver = this._stepOne(interpol2);
-        if (gameOver) {
-          return gameOver;
-        }
+      interpol -= interpol2;
+      const gameOver = this._stepOne(interpol2);
+      if (gameOver) {
+        return gameOver;
       }
       this.birdFlapWings();
     }
