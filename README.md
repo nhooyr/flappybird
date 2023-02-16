@@ -13,6 +13,27 @@ CSS and JavaScript integrate together.
   <img src="./ss-dark.png" alt="Screenshot" width="49%">
 </a>
 
+## Minimal?
+
+There's a decent amount of code to implement this and so it's fair to argue it is not
+as minimal as it could be.
+
+However, by minimal I mean the least amount of code while still behaving correctly. The
+game loop for example could be much simpler. Instead of stepping through and being able to
+render partial/multiple time units it could throttle the frame rate to 60fps.
+
+But then on higher FPS devices the game wouldn't run as smooth and devices that cannot
+keep up to 60 fps, the time velocity in the game would change. It would become slower and
+thus easier.
+
+The game could also immediately process flap input instead of deferring it to be processed
+in the render loop based on its timestamp and thus on the correct frame. But then on
+lagging devices, multiple inputs could appear to be processed all at once instead of being
+processed according to the time at which they came in.
+
+All of which would be incorrect behaviour and is thus not minimal but rather incomplete by
+the definition given above.
+
 ## Presentation
 
 The presentation is in [./pres](./pres) and accessible at
