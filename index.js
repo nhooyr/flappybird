@@ -48,7 +48,7 @@ function init() {
   let game;
   const processInput = () => {
     if (game) {
-      game.flapBird();
+      game.birdFlapWings();
       return;
     }
 
@@ -194,11 +194,7 @@ class Game {
   }
 
   stepOne(now, interpol) {
-    // Steal inputs from the next frame for lower input latency.
-    while (
-      this.birdFlapInputs.length &&
-      this.birdFlapInputs[0].ts <= now + this.timeUnitVelocity
-    ) {
+    while (this.birdFlapInputs.length && this.birdFlapInputs[0].ts <= now) {
       this.birdFlapInputs.shift();
       if (this.birdTopVelocity > 0) {
         this.birdTopVelocity = this.birdFlapForce;
@@ -263,7 +259,7 @@ class Game {
     this.fpsMeter.textContent = `${this.fps()}`.padStart(3, "0");
   }
 
-  flapBird() {
+  birdFlapWings() {
     this.birdFlapInputs.push({ts: performance.now()});
   }
 
