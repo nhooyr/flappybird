@@ -80,7 +80,7 @@ in a free-form format.
 </a>
 
 > Diagram generated from [./pres/game-loop.d2](./pres/game-loop.d2) with
-> [d2](https://github.com/terrastruct/d2).
+> [D2](https://github.com/terrastruct/d2).
 
 - The bird falling from gravity in the shape of a parabola. Very relevant to them as they
   are learning (or going to be) about parabolas. Of the form `-0.075*x^2`. Kids always
