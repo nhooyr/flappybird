@@ -77,7 +77,7 @@ function init() {
     // We do not call stepCB directly here with performance.now() as we need now to be
     // guaranteed to be moving forward. requestAnimationFrame caches now for the frame and
     // so if you call stepCB here directly then the requestAnimationFrame in stepCB will
-    // almost immediately get called back with an older now.
+    // almost immediately get called back with an older cached now.
     requestAnimationFrame(stepCB);
   };
 }
