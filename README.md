@@ -37,10 +37,12 @@ above but rather incomplete.
 
 > On that second point, this doesn't cause any input lag because of the earlier point that
 > the game loop can process and render fractional time units. On a 120 Hz display, input
-> will be sampled effectively at 120 Hz even though the time unit is defined as 1/60th of
-> a second. And even if the render loop cannot keep up as the code splits up time units
-> being processed by input received during them. Thus the processing for each input begins
-> not at the beginning of each time unit, but exactly as when it arrived within the unit.
+> will be sampled at 120 Hz even though the time unit is defined as 1/60th of a second.
+> And even if the render loop cannot keep up, the code splits up time units being
+> processed by input received during them. Thus the processing for each input begins not
+> at the beginning of each time unit, but exactly as when it arrived within the unit and
+> so you will never have multiple inputs being processed exactly at once. At least at
+> millisecond resolution.
 
 ## Presentation
 
