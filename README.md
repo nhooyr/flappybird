@@ -75,7 +75,7 @@ in a free-form format.
     Physics. `0.5*(v + v0)*t` to `(v0 + 0.5*vd)*t`. The derivation is in `Game.stepOne()`
     in [./index.js](./index.js).
 
-<img src="./pres/game-loop.svg">
+<img src="./pres/game-loop.svg" alt="Game Loop Diagram" width="100%" height="209px" >
 
 > Diagram generated from [./pres/game-loop.d2](./pres/game-loop.d2).
 
