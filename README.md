@@ -1,6 +1,6 @@
 # Flappy Bird <img src="./favicon.jpg" alt="Favicon" width="32" height="32" style="vertical-align: middle">
 
-https://nhooyr.github.io/flappy-bird/
+https://nhooyr.github.io/flappybird/
 
 I wrote this minimal demo game for a short presentation I gave at the [Kaslo, BC
 highschool](https://jvh.sd8.bc.ca/) to freshmen and sophmores in early 2023 on how HTML,
@@ -8,7 +8,7 @@ CSS and JavaScript integrate together.
 
 > \*warning\*: This game is very addictive. Play at your own peril.
 
-<a href="https://nhooyr.github.io/flappy-bird/">
+<a href="https://nhooyr.github.io/flappybird/">
   <img src="./ss-light.png" alt="Screenshot" width="49%">
   <img src="./ss-dark.png" alt="Screenshot" width="49%">
 </a>
@@ -38,11 +38,11 @@ above but rather incomplete.
 ## Presentation
 
 The presentation is in [./pres](./pres) and accessible at
-https://nhooyr.github.io/flappy-bird/pres/.
+https://nhooyr.github.io/flappybird/pres/.
 
 See the help log in the console for how to navigate between the slides.
 
-<a href="https://nhooyr.github.io/flappy-bird/pres/" >
+<a href="https://nhooyr.github.io/flappybird/pres/" >
   <!-- kbd is for adding a border around the preview. -->
   <kbd>
     <img src="./pres/slides/slides.001.png" alt="Presentation Preview">

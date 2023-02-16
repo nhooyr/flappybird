@@ -66,7 +66,7 @@ function init() {
       const gameOver = game.step(now);
       game.render();
       if (highScore < game.score) {
-        localStorage.setItem("flappy-bird-high-score", game.score);
+        localStorage.setItem("flappybird-high-score", game.score);
       }
       if (gameOver) {
         game = undefined;
@@ -83,12 +83,12 @@ function init() {
 }
 
 function restoreHighScoreBoard(highScoreBoard) {
-  let highScore = localStorage.getItem("flappy-bird-high-score");
+  let highScore = localStorage.getItem("flappybird-high-score");
   if (highScore) {
     highScoreBoard.textContent = `${highScore}`.padStart(3, "0");
     return highScore;
   } else {
-    localStorage.setItem("flappy-bird-high-score", 0);
+    localStorage.setItem("flappybird-high-score", 0);
     return 0;
   }
 }
