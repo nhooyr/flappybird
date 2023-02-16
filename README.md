@@ -81,7 +81,7 @@ in a free-form format.
   - How the FPS meter works.
   - The interpolation equation used for calculating the next point of the bird is derived
     from the one of the core kinematics equation that they'll be learning in Junior Year
-    Physics. `0.5*(v + v0)*t` to `(v0 + 0.5*vd)*t`. The derivation is in `Game.stepOne()`
+    Physics. `0.5*(v + v0)*t` to `(v0 + 0.5*vd)*t`. The derivation is in `Game._stepOne()`
     in [./index.js](./index.js).
 
 <a href="https://raw.githubusercontent.com/nhooyr/flappybird/master/pres/game-loop.svg">
