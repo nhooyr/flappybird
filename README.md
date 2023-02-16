@@ -85,7 +85,7 @@ in a free-form format.
     in [./index.js](./index.js).
 
 <a href="https://raw.githubusercontent.com/nhooyr/flappybird/master/pres/game-loop.svg">
-  <img src="./pres/game-loop.svg" alt="Game Loop Diagram" width="100%" height="209px" >
+  <img src="./pres/game-loop.svg" alt="Game Loop Diagram" width="100%" height="322px" >
 </a>
 
 > Diagram generated from [./pres/game-loop.d2](./pres/game-loop.d2) with
