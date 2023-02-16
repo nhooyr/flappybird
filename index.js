@@ -122,9 +122,12 @@ class Game {
     // These next four fields could all be static but I made them regular fields so that
     // students can adjust them for their own levels.
 
-    // 60 time units a second.
+    // 60 time units a second. A time unit is the maximum duration after which a collision
+    // is checked for and the duration over which a whole velocity/acceleration unit is
+    // applied.
     // note: This doesn't mean we render at 60 FPS. Game._step() supports rendering in
-    // between whole time units for high refresh rate displays.
+    // between whole time units for high refresh rate displays. e.g. try setting this to
+    // 30 time units a second instead and see what effect it is.
     this.timeUnitVelocity = Math.floor(1000 / 60);
     // Path of the parabola -0.075*x^2.
     this.birdGravity = 0.15;
@@ -210,8 +213,8 @@ class Game {
 
     // We break up the time unit being stepped through for each input to process
     // each input at the exact time at which it came in.
-    // The whole time unit is thus the maximum time duration after which a collision is
-    // checked for.
+    // Input is sampled at whatever rate at which it comes in indifferent towards time
+    // velocity.
     for (let i = 0; i < timeUnitInputs.length; i++) {
       let durSinceLastStep;
       if (i === 0) {
