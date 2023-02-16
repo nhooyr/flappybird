@@ -38,7 +38,15 @@ I did not get to them all in my short presentation but these were my discussion 
   Including on mobile.
   - How dark mode works.
   - Why I only used a CSS class once.
-- How input is received and processed.
+- How the game loop runs and handles both high refresh rates and lag.
+  - How the FPS meter works.
+  - The interpolation equation used for calculating the next point of the bird is derived
+    from the one of the core kinematics equation that they'll be learning in Junior Year
+    Physics. `0.5*(v + v0)*t` to `(v0 + 0.5*vd)*t`. The derivation is in `Game.step()` in
+    [./index.js](./index.js).
+
+<img src="./pres/game-loop.svg">
+
 - The bird falling from gravity in the shape of a parabola. Very relevant to them as they
   are learning (or going to be) about parabolas. Of the form `-0.075*x^2`. Kids always
   question if abstract math useful and here is an excellent example!
@@ -47,12 +55,7 @@ I did not get to them all in my short presentation but these were my discussion 
 - How the randomly sized pipes are generated.
 - How the high score is persisted between page loads.
 - How the prompt is displayed and hidden.
-- How the game loop runs and handles both high refresh rates and lag.
-  - How the FPS meter works.
-  - The interpolation equation used for calculating the next point of the bird is derived
-    from the one of the core kinematics equation that they'll be learning in Junior Year
-    Physics. `0.5*(v + v0)*t` to `(v0 + 0.5*vd)*t`. The derivation is in `Game.step()` in
-    [./index.js](./index.js).
+- How input is received and processed.
 - How to adjust attributes of the game like gravity, time, the bird's flap force, pipe
   speed, pipe gap size etc.
   - When the the 3 difficulty levels are reached and what attributes of the game they

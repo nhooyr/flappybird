@@ -1,0 +1,13 @@
+direction: down
+first input -> start game -> game loop
+
+game loop: {
+  direction: down
+  input -> increase bird X velocity
+
+  move bird -> move pipes -> render
+
+  render -> no collision -> wait 16 milliseconds -> move bird
+  render -> collision detected -> game over
+  # no collision.near: game loop.collision detected
+}
