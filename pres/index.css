@@ -18,6 +18,6 @@ body {
   display: none;
 }
 
-#slide-visible {
+.slide-visible {
   display: block;
 }

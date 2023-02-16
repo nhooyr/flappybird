@@ -37,24 +37,71 @@ document.addEventListener("contextmenu", e => {
   prev();
 });
 
-function next() {
-  const slideVisible = document.getElementById("slide-visible");
-  slideVisible.id = "";
-  if (slideVisible.nextElementSibling) {
-    slideVisible.nextElementSibling.id = "slide-visible";
+function init() {
+  const url = new URL(location.href);
+  if (url.searchParams.get("slide")) {
+    let slideIndex = parseInt(url.searchParams.get("slide")) - 1;
+    if (slideIndex < 0) {
+      slideIndex = 0;
+    } else if (slideIndex > document.body.children.length - 1) {
+      slideIndex = document.body.children.length - 1;
+    }
+    hideSlide(document.body.children[0]);
+    showSlide(document.body.children[slideIndex]);
   } else {
-    slideVisible.parentElement.children[0].id = "slide-visible";
+    replaceQuerySlideIndex(1);
+  }
+}
+init();
+
+function next() {
+  const visibleSlide = document.querySelector(".slide-visible");
+  hideSlide(visibleSlide);
+  if (visibleSlide.nextElementSibling) {
+    showSlide(visibleSlide.nextElementSibling);
+  } else {
+    showSlide(visibleSlide.parentElement.firstElementChild);
   }
 }
 
 function prev() {
-  const slideVisible = document.getElementById("slide-visible");
-  slideVisible.id = "";
-  if (slideVisible.previousElementSibling) {
-    slideVisible.previousElementSibling.id = "slide-visible";
+  const visibleSlide = document.querySelector(".slide-visible");
+  hideSlide(visibleSlide);
+  if (visibleSlide.previousElementSibling) {
+    showSlide(visibleSlide.previousElementSibling);
   } else {
-    slideVisible.parentElement.children[
-      slideVisible.parentElement.children.length - 1
-    ].id = "slide-visible";
+    showSlide(visibleSlide.parentElement.lastElementChild);
   }
+}
+
+function showSlide(slide) {
+  slide.classList.add("slide-visible");
+  setQuerySlideIndex(getElementIndex(slide));
+}
+
+function hideSlide(slide) {
+  slide.classList.remove("slide-visible");
+}
+
+function setQuerySlideIndex(index) {
+  const url = new URL(location.href);
+  url.searchParams.set("slide", index);
+  history.pushState({}, "", url);
+}
+
+function replaceQuerySlideIndex(index) {
+  const url = new URL(location.href);
+  if (url.searchParams.get("slide") !== `${index}`) {
+    url.searchParams.set("slide", index);
+    history.replaceState({}, "", url);
+  }
+}
+
+function getElementIndex(el) {
+  var index = 0;
+  while ((el = el.previousElementSibling)) {
+    index++;
+  }
+  console.info(index);
+  return index + 1;
 }
