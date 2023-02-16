@@ -1,4 +1,4 @@
-# flappy-bird <img src="./favicon.jpg" alt="Favicon" width="32" height="32" style="vertical-align: middle">
+# Flappy Bird <img src="./favicon.jpg" alt="Favicon" width="32" height="32" style="vertical-align: middle">
 
 https://nhooyr.github.io/flappy-bird/
 
@@ -15,8 +15,8 @@ CSS and JavaScript integrate together.
 
 ## Minimal?
 
-There's a decent amount of code to implement this and so it's fair to argue it is not
-as minimal as it could be.
+Flappy Bird as implemented in this repo has a decent amount of code and complexity to it.
+It would thus be fair to argue it is not as minimal as it could be.
 
 However, by minimal I mean the least amount of code while still behaving correctly. The
 game loop for example could be much simpler. Instead of stepping through and being able to
@@ -26,13 +26,14 @@ But then on higher FPS devices the game wouldn't run as smooth and devices that 
 keep up to 60 fps, the time velocity in the game would change. It would become slower and
 thus easier.
 
-The game could also immediately process flap input instead of deferring it to be processed
-in the render loop based on its timestamp and thus on the correct frame. But then on
-lagging devices, multiple inputs could appear to be processed all at once instead of being
-processed according to the time at which they came in.
+The game could also immediately process flap inputs instead of deferring them to be
+processed in the render loop based on their timestamp and thus as part of the correct time
+unit. But then on lagging devices, multiple inputs could appear to be processed all at
+once in a single time unit instead of being applied in the time unit on which they were
+received.
 
-All of which would be incorrect behaviour and is thus not minimal but rather incomplete by
-the definition given above.
+All of which would be incorrect behaviour and is thus not minimal by the definition given
+above but rather incomplete.
 
 ## Presentation
 
@@ -50,7 +51,12 @@ See the help log in the console for how to navigate between the slides.
 <!-- Do not know why but two br are required to separate the kbd border from below -->
 <br /><br />
 
-I did not get to them all in my short presentation but these were my discussion points:
+### Discussion Points
+
+I have included a list of all the potential discussion points I could come up with below.
+In my short presentation I did not get to them all. I only covered the points in the
+slides above. Then I let them read the code, make adjustments, play and ask me questions
+in a free-form format.
 
 - The HTML structure.
   - The details HTML element for collapsible help which is relatively unknown method for
