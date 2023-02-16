@@ -169,9 +169,10 @@ class Game {
       return false;
     }
     if (now < this.lastStepTime) {
-      // Time overflowed.
+      // Sanity check. Was occuring previously when I was directly calling stepCB.
+      // See comment there.
       throw new Error(
-        `time overflowed, now: ${now} < lastStepTime: ${this.lastStepTime}`
+        `time flew backwards? lastStepTime: ${this.lastStepTime} > now: ${now}`
       );
     }
 
@@ -194,6 +195,10 @@ class Game {
         //
         // See https://en.wikipedia.org/wiki/Floating-point_arithmetic#Representable_numbers,_conversion_and_rounding
         interpol = (now - (i - this.timeUnitVelocity)) / this.timeUnitVelocity;
+        if (interpol == 0) {
+          // Could occur if we go beyond millisecond resolution in the future.
+          throw new Error(`interpol rounded down to zero: last: ${i}, now: ${now}`);
+        }
         i = now;
       }
       const gameOver = this.stepOne(i, interpol);
@@ -224,10 +229,12 @@ class Game {
         durSinceLastStep = timeUnitInputs[i].ts - timeUnitInputs[i - 1].ts;
       }
       const interpol2 = durSinceLastStep / this.timeUnitVelocity;
-      interpol -= interpol2;
-      const gameOver = this._stepOne(interpol2);
-      if (gameOver) {
-        return gameOver;
+      if (interpol2 > 0) {
+        interpol -= interpol2;
+        const gameOver = this._stepOne(interpol2);
+        if (gameOver) {
+          return gameOver;
+        }
       }
       this.birdFlapWings();
     }

@@ -110,6 +110,12 @@ in a free-form format.
   - Make the game harder.
   - Make the game easier.
   - Change the colors.
+- Best game strategies for getting the highest score?
+  - Moving to just above the middle after each pipe.
+    - As for why not exactly the middle, the bird is always falling.
+  - Taping space and enter at the same time for a super fast double jump.
+  - If playing on a touchscreen, keeping your finger under or to the left of the right
+    edge of the game to perceive the gap in new pipes as soon as possible.
 - Canvas being a more performant real world option for writing games due to its GPU
   acceleration. This demo was written purely for educational purposes on how HTML, CSS and
   JavaScript integrate.
