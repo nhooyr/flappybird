@@ -121,9 +121,9 @@ class Game {
     // These next four fields could all be static but I made them regular fields so that
     // students can adjust them for their own levels.
 
-    // 60 time units a second. A time unit is the maximum duration after which a collision
-    // is checked for and the duration over which a whole velocity/acceleration unit is
-    // applied.
+    // About 60 time units a second. A time unit is the maximum duration after which a
+    // collision is checked for and the duration over which a whole velocity/acceleration
+    // unit is applied.
     // note: This doesn't mean we render at 60 FPS. Game._step() supports rendering in
     // between whole time units for high refresh rate displays. e.g. try setting this to
     // 30 time units a second instead and see what effect it is.
@@ -186,17 +186,18 @@ class Game {
         // e.g.if now = this.timeUnitVelocity*1.5 then we will step one time unit and then
         // interpolate 0.5 of the next time unit.
         //
-        // The lowest this can ever be is 1/16 which is 0.0625. The lowest number we
-        // multiply interpol by is 0.15 i.e gravity. 0.15*0.0625 = 0.009375 which is well
-        // within the range of 64 bit floats and so we will never be in a situation where
-        // time is lost due to interpol being truncated or otherwise not representable
-        // due to the imprecise nature of floats.
+        // The lowest this can ever be is 1/this.timeUnitVelocity which is 0.0625. The
+        // lowest number we multiply interpol by is 0.15 i.e gravity. 0.15*0.0625 =
+        // 0.009375 which is well within the range of 64 bit floats and so we will never
+        // be in a situation where time is lost due to interpol being truncated by the
+        // nature of bounded machine floats.
         //
         // See https://en.wikipedia.org/wiki/Floating-point_arithmetic#Representable_numbers,_conversion_and_rounding
         interpol = (now - (i - this.timeUnitVelocity)) / this.timeUnitVelocity;
-        if (interpol == 0) {
+        if (interpol < 0.0625) {
           // Could occur if we go beyond millisecond resolution in the future.
-          throw new Error(`interpol rounded down to zero: last: ${i}, now: ${now}`);
+          // Or if timeUnitVelocity has been increased.
+          throw new Error(`interpol below limit of 0.0625: last: ${i}, now: ${now}`);
         }
         i = now;
       }
