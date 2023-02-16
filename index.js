@@ -115,7 +115,7 @@ class Game {
     // 60 time units a second.
     // note: This doesn't mean we render at 60 FPS. Game.step() supports rendering in
     // between full time units for high refresh rate displays.
-    this.timeVelocity = Math.floor(1000 / 60);
+    this.timeUnitVelocity = Math.floor(1000 / 60);
     // Path of the parabola -0.075*x^2.
     this.birdGravity = 0.15;
     this.birdVelocityMax = 6;
@@ -164,13 +164,13 @@ class Game {
 
     let interpol = 1;
     for (
-      let i = this.lastStepTime + this.timeVelocity;
-      i < now + this.timeVelocity;
-      i += this.timeVelocity
+      let i = this.lastStepTime + this.timeUnitVelocity;
+      i < now + this.timeUnitVelocity;
+      i += this.timeUnitVelocity
     ) {
       if (i > now) {
         // interpolate the next render into a fraction of the time unit.
-        // e.g.if now = this.timeVelocity*1.5 then we will step one time unit and then
+        // e.g.if now = this.timeUnitVelocity*1.5 then we will step one time unit and then
         // interpolate 0.5 of the next time unit.
         //
         // The lowest this can ever be is 1/16 which is 0.0625. The lowest number we
@@ -180,7 +180,7 @@ class Game {
         // due to the imprecise nature of floats.
         //
         // See https://en.wikipedia.org/wiki/Floating-point_arithmetic#Representable_numbers,_conversion_and_rounding
-        interpol = (now - (i - this.timeVelocity)) / this.timeVelocity;
+        interpol = (now - (i - this.timeUnitVelocity)) / this.timeUnitVelocity;
         i = now;
       }
       const gameOver = this.stepOne(i, interpol);
@@ -194,7 +194,11 @@ class Game {
   }
 
   stepOne(now, interpol) {
-    while (this.birdFlapInputs.length && this.birdFlapInputs[0].ts <= now) {
+    // Steal inputs from the next frame for lower input latency.
+    while (
+      this.birdFlapInputs.length &&
+      this.birdFlapInputs[0].ts <= now + this.timeUnitVelocity
+    ) {
       this.birdFlapInputs.shift();
       if (this.birdTopVelocity > 0) {
         this.birdTopVelocity = this.birdFlapForce;
