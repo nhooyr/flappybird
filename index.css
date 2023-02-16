@@ -192,13 +192,15 @@ h4 {
     border-color: White;
   }
   #pipe-top {
+    background: ForestGreen;
     border-color: White;
   }
   #pipe-bot {
+    background: ForestGreen;
     border-color: White;
   }
   #bird {
-    background: #ff0066;
+    background: HotPink;
     border-color: White;
   }
   #prompt {

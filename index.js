@@ -48,7 +48,7 @@ function init() {
   let game;
   const processInput = () => {
     if (game) {
-      game.jumpBird();
+      game.flapBird();
       return;
     }
 
@@ -112,7 +112,7 @@ class Game {
     // These next four fields could all be static but I made them regular fields so that
     // students can adjust them for their own levels.
 
-    // 60 time units a minute.
+    // 60 time units a second.
     // note: This doesn't mean we render at 60 FPS. Game.step() supports rendering in
     // between full time units for high refresh rate displays.
     this.timeVelocity = Math.floor(1000 / 60);
@@ -121,7 +121,7 @@ class Game {
     this.birdVelocityMax = 6;
     this.birdFlapForce = -4;
 
-    this.birdJumps = [];
+    this.birdFlapInputs = [];
     this.pipeScored = false;
     this.score = 0;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
@@ -138,10 +138,10 @@ class Game {
       this.displayGameOverPrompt();
       return true;
     }
-    this.fpsa.push({ts: now});
-    while (now - this.fpsa[0].ts > 4000) {
+    while (this.fpsa.length && now - this.fpsa[0].ts > 4000) {
       this.fpsa.shift();
     }
+    this.fpsa.push({ts: now});
     return false;
   }
 
@@ -194,12 +194,8 @@ class Game {
   }
 
   stepOne(now, interpol) {
-    while (this.birdJumps.length) {
-      const birdFlapTS = this.birdJumps[0];
-      if (birdFlapTS > now) {
-        break;
-      }
-      this.birdJumps.shift();
+    while (this.birdFlapInputs.length && this.birdFlapInputs[0].ts <= now) {
+      this.birdFlapInputs.shift();
       if (this.birdTopVelocity > 0) {
         this.birdTopVelocity = this.birdFlapForce;
       } else {
@@ -263,8 +259,8 @@ class Game {
     this.fpsMeter.textContent = `${this.fps()}`.padStart(3, "0");
   }
 
-  jumpBird(now) {
-    this.birdJumps.push(now);
+  flapBird() {
+    this.birdFlapInputs.push({ts: performance.now()});
   }
 
   detectBirdCollision() {
