@@ -23,7 +23,7 @@ See the help log in the console for how to navigate between the slides.
 <a href="https://nhooyr.github.io/flappy-bird/pres/" >
   <!-- kbd is for adding a border around the preview. -->
   <kbd>
-    <img src="./pres/images/images.001.png" alt="Presentation Preview">
+    <img src="./pres/slides/slides.001.png" alt="Presentation Preview">
   </kbd>
 </a>
 <!-- Do not know why but two br are required to separate the kbd border from below -->
