@@ -116,7 +116,7 @@ in a free-form format.
 
 ## Footer
 
-This is not an endorsement of HTML, CSS or JavaScript. The [HTML
+This is not an endorsement of HTML, CSS or JavaScript. The [WHATWG
 DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) dominates our
 industry with widespread support and thus makes for an excellent beginner development
 target. Additionally, they were already learning it from their teacher.
