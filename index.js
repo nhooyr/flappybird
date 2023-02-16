@@ -210,6 +210,8 @@ class Game {
 
     // We break up the time unit being stepped through for each input to process
     // each input at the exact time at which it came in.
+    // The whole time unit is thus the maximum time duration after which a collision is
+    // checked for.
     for (let i = 0; i < timeUnitInputs.length; i++) {
       let durSinceLastStep;
       if (i === 0) {
