@@ -56,7 +56,7 @@ function init() {
   let game;
   const handleFlapInput = () => {
     if (game) {
-      game.birdFlapWings();
+      game.birdFlapWingsInput();
       return;
     }
 
@@ -161,7 +161,7 @@ class Game {
       return this.stepOne(now, 1);
     }
 
-    if (now == this.lastStepTime) {
+    if (now === this.lastStepTime) {
       // A millisecond has not yet elapsed.
       return false;
     }
@@ -203,18 +203,38 @@ class Game {
   }
 
   stepOne(now, interpol) {
-    while (this.birdFlapInputs.length && this.birdFlapInputs[0].ts <= now) {
-      this.birdFlapInputs.shift();
-      if (this.birdVelocityY > 0) {
-        this.birdVelocityY = this.birdFlapForce;
+    const timeUnitInputs = this.birdFlapInputs.filter(v => {
+      return v.ts <= now;
+    });
+    this.birdFlapInputs.splice(0, timeUnitInputs.length);
+
+    // We break up the time unit being stepped through for each input to process
+    // each input at the exact time at which it came in.
+    for (let i = 0; i < timeUnitInputs.length; i++) {
+      let durSinceLastStep;
+      if (i === 0) {
+        durSinceLastStep =
+          timeUnitInputs[0].ts - (now - this.timeUnitVelocity * interpol);
       } else {
-        this.birdVelocityY += this.birdFlapForce;
+        durSinceLastStep = timeUnitInputs[i].ts - timeUnitInputs[i - 1].ts;
       }
-      if (this.birdVelocityY < -this.birdVelocityYMax) {
-        this.birdVelocityY = -this.birdVelocityYMax;
+      const interpol2 = durSinceLastStep / this.timeUnitVelocity;
+      interpol -= interpol2;
+      const gameOver = this._stepOne(interpol2);
+      if (gameOver) {
+        return gameOver;
       }
+      this.birdFlapWings();
     }
 
+    const gameOver = this._stepOne(interpol);
+    if (gameOver) {
+      return gameOver;
+    }
+    return false;
+  }
+
+  _stepOne(interpol) {
     let birdVelocityYDelta = this.birdGravity * interpol;
     let birdVelocityYFinal = this.birdVelocityY + birdVelocityYDelta;
     if (birdVelocityYFinal > this.birdVelocityYMax) {
@@ -268,8 +288,19 @@ class Game {
     this.fpsMeter.textContent = `${this.fps()}`.padStart(3, "0");
   }
 
-  birdFlapWings() {
+  birdFlapWingsInput() {
     this.birdFlapInputs.push({ts: performance.now()});
+  }
+
+  birdFlapWings() {
+    if (this.birdVelocityY > 0) {
+      this.birdVelocityY = this.birdFlapForce;
+    } else {
+      this.birdVelocityY += this.birdFlapForce;
+    }
+    if (this.birdVelocityY < -this.birdVelocityYMax) {
+      this.birdVelocityY = -this.birdVelocityYMax;
+    }
   }
 
   detectBirdCollision() {

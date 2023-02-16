@@ -20,7 +20,7 @@ It would thus be fair to argue it is not as minimal as it could be.
 
 However, by minimal I mean the least amount of code while still behaving correctly. The
 game loop for example could be much simpler. Instead of stepping through and being able to
-render partial/multiple time units it could throttle the frame rate to 60fps.
+render fractional/multiple time units, it could throttle the frame rate to 60fps.
 
 But then on higher FPS devices the game wouldn't run as smooth and devices that cannot
 keep up to 60 fps, the time velocity in the game would change. It would become slower and
@@ -34,6 +34,13 @@ received.
 
 All of which would be incorrect behaviour and is thus not minimal by the definition given
 above but rather incomplete.
+
+> On that second point, this doesn't cause any input lag because of the earlier point that
+> the game loop can process and render fractional time units. On a 120 Hz display, input
+> will be sampled effectively at 120 Hz even though the time unit is defined as 1/60th of
+> a second. And even if the render loop cannot keep up as the code splits up time units
+> being processed by input received during them. Thus the processing for each input begins
+> not at the beginning of each time unit, but exactly as when it arrived within the unit.
 
 ## Presentation
 
