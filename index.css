@@ -192,9 +192,11 @@ h4 {
     border-color: White;
   }
   #pipe-top {
+    background: DarkGreen;
     border-color: White;
   }
   #pipe-bot {
+    background: DarkGreen;
     border-color: White;
   }
   #bird {
