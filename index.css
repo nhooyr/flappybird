@@ -136,8 +136,8 @@ footer {
   height: 25px;
   width: 25px;
   position: absolute;
-  top: calc((400px / 2) - (29px / 2) - 30px);
-  left: calc((400px / 2) - (29px / 2));
+  top: calc((402px / 2) - (29px / 2) - 30px);
+  left: calc((402px / 2) - (29px / 2));
 
   border: 2px solid Black;
   background: LemonChiffon;

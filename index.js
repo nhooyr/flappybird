@@ -112,7 +112,7 @@ class Game {
     this.pipeTopHeight = 100;
     this.pipeBotHeight = 150;
     // Kept in sync with the CSS.
-    this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth;
+    this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth - 2;
 
     // These two are adjusted in our 3 levels.
     this.pipeVelocityX = 2;
