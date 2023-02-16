@@ -118,7 +118,7 @@ h4 {
   position: absolute;
   left: calc(400px - 52px);
 
-  background: Green;
+  background: LightGreen;
   border: 2px solid Black;
   border-top: none;
 }
@@ -130,7 +130,7 @@ h4 {
   left: calc(400px - 52px);
   bottom: 0px;
 
-  background: Green;
+  background: LightGreen;
   border: 2px solid Black;
   border-bottom: none;
 }
@@ -143,7 +143,7 @@ h4 {
   left: calc((400px / 2) - (25px / 2));
 
   border: 2px solid Black;
-  background: Yellow;
+  background: LemonChiffon;
 }
 
 #prompt {

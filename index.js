@@ -48,14 +48,14 @@ function init() {
   let game;
   const processInput = () => {
     if (game) {
-      game.birdJump();
+      game.jumpBird();
       return;
     }
 
     highScore = restoreHighScoreBoard(highScoreBoard);
     game = new Game();
     const stepCB = now => {
-      const gameOver = game.stepTo(now);
+      const gameOver = game.step(now);
       game.render();
       if (highScore < game.score) {
         localStorage.setItem("flappy-bird-high-score", game.score);
@@ -66,7 +66,11 @@ function init() {
       }
       requestAnimationFrame(stepCB);
     };
-    stepCB(performance.now());
+    // We do not call stepCB directly here with performance.now() as we need now to be
+    // guaranteed to be moving forward. requestAnimationFrame caches now for the frame and
+    // so if you call stepCB here directly then the requestAnimationFrame in stepCB will
+    // almost immediately get called back with an older now.
+    requestAnimationFrame(stepCB);
   };
 }
 
@@ -92,124 +96,159 @@ class Game {
     this.scoreBoard = document.getElementById("score-board");
     this.fpsMeter = document.getElementById("fps-meter");
 
+    // Kept in sync with the CSS.
     this.birdTop = this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - 30;
-    this.bird.style.top = `${this.birdTop}px`;
     this.birdTopVelocity = 0;
 
+    this.gapSize = 150;
     this.pipeTopHeight = 100;
     this.pipeBotHeight = 150;
-    this.pipeTop.style.height = `${this.pipeTopHeight}px`;
-    this.pipeBot.style.height = `${this.pipeBotHeight}px`;
+    // Kept in sync with the CSS.
     this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth + 2;
-    this.pipeTop.style.left = `${this.pipeLeft}px`;
-    this.pipeBot.style.left = `${this.pipeLeft}px`;
 
-    this.gapSize = 150;
+    // These five next fields could all be static but I made them regular fields so
+    // that students can adjust them for their own levels.
+
+    // 60 time units a minute.
+    // note: This doesn't mean we render at 60 FPS. Game.step() supports rendering in
+    // between full time units for high refresh rate displays.
+    this.timeVelocity = Math.floor(1000 / 60);
     // Path of the parabola -0.075*x^2.
     this.birdGravity = 0.15;
     this.birdVelocityMax = 6;
     this.birdFlapForce = -4;
     this.pipeLeftVelocity = 2;
 
+    this.birdJumps = [];
     this.pipeScored = false;
     this.score = 0;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
-    // Sets lastStepTime to immediately render on stepTo(now).
-    this.lastStepTime = performance.now() - Game.timeVelocity;
+    this.lastStepTime;
+    // fpsa tracks the timestamp of every frame in the last 4 seconds.
     this.fpsa = [];
+
+    this.render();
   }
 
-  // 60 states a minute.
-  // note: This doesn't mean we render at 60 FPS. Game.step() supports rendering partial
-  // states for high refresh rate displays.
-  static timeVelocity = Math.floor(1000 / 60);
-
-  stepTo(now) {
-    const stepDur = now - this.lastStepTime;
-    if (stepDur === 0) {
-      // Somehow we got called before a millisecond passed.
-      return false;
-    }
-    if (stepDur < 0) {
-      // Time overflowed.
-      this.lastStepTime = now;
-      return false;
-    }
-    // The lowest this can ever be is 1/16 which is 0.0625. The lowest number we multiply
-    // stepFrac by is 0.15. 0.15*0.0625 = 0.009375 which is well within the range of 64
-    // bit floats and so we will never be in a situation where time is lost due to
-    // stepFrac being truncated.
-    const steps = stepDur / Game.timeVelocity;
-    const over = this.step(steps);
-    if (over) {
+  step(now) {
+    const gameOver = this._step(now);
+    if (gameOver) {
       this.displayGameOverPrompt();
       return true;
     }
-    this.fpsa.push({ts: now, fps: 1000 / stepDur});
-    while (this.fpsa.length && performance.now() - this.fpsa[0].ts > 3000) {
-      this.fpsa.pop();
+    this.fpsa.push({ts: now});
+    while (now - this.fpsa[0].ts > 4000) {
+      this.fpsa.shift();
     }
+    return false;
+  }
+
+  _step(now) {
+    if (!this.lastStepTime) {
+      this.lastStepTime = now;
+      return this.stepOne(now, 1);
+    }
+
+    if (now == this.lastStepTime) {
+      // A millisecond has not yet elapsed.
+      return false;
+    }
+    if (now < this.lastStepTime) {
+      // Time overflowed.
+      throw new Error(
+        `time overflowed, now: ${now} < lastStepTime: ${this.lastStepTime}`
+      );
+    }
+
+    let interpol = 1;
+    for (
+      let i = this.lastStepTime + this.timeVelocity;
+      i < now + this.timeVelocity;
+      i += this.timeVelocity
+    ) {
+      if (i > now) {
+        // interpolate the next render into a fraction of the time unit.
+        // e.g.if now = this.timeVelocity*1.5 then we will step one time unit and then
+        // interpolate 0.5 of the next time unit.
+        //
+        // The lowest this can ever be is 1/16 which is 0.0625. The lowest number we
+        // multiply interpol by is 0.15 i.e gravity. 0.15*0.0625 = 0.009375 which is well
+        // within the range of 64 bit floats and so we will never be in a situation where
+        // time is lost due to interpol being truncated or otherwise not representable
+        // due to the imprecise nature of floats.
+        //
+        // See https://en.wikipedia.org/wiki/Floating-point_arithmetic#Representable_numbers,_conversion_and_rounding
+        interpol = (now - (i - this.timeVelocity)) / this.timeVelocity;
+        i = now;
+      }
+      const gameOver = this.stepOne(i, interpol);
+      if (gameOver) {
+        return gameOver;
+      }
+    }
+
     this.lastStepTime = now;
     return false;
   }
 
-  // step steps n states.
-  //
-  // n can be a float in which case step will interpolate the render through a fraction
-  // of the state.
-  step(n) {
-    let interpol = 1;
-    for (let i = 0; i < n; i++) {
-      if (n - i < 1) {
-        // interpolate by the fractional remainder of n. e.g. for n = 1.5 we will step
-        // one state and then interpolate 0.5 of the next state.
-        interpol = n - i;
+  stepOne(now, interpol) {
+    while (this.birdJumps.length) {
+      const birdFlapTS = this.birdJumps[0];
+      if (birdFlapTS > now) {
+        break;
       }
-      let birdTopVelocityDelta = this.birdGravity * interpol;
-      let birdTopVelocityFinal = this.birdTopVelocity + birdTopVelocityDelta;
-      if (birdTopVelocityFinal > this.birdVelocityMax) {
-        birdTopVelocityFinal = this.birdVelocityMax;
-        birdTopVelocityDelta = this.birdVelocityMax - this.birdTopVelocity;
+      this.birdJumps.shift();
+      if (this.birdTopVelocity > 0) {
+        this.birdTopVelocity = this.birdFlapForce;
+      } else {
+        this.birdTopVelocity += this.birdFlapForce;
       }
-      // https://en.wikipedia.org/wiki/Equations_of_motion#Constant_translational_acceleration_in_a_straight_line
-      // Derived from Equation 3:
-      //   = 0.5*(v + v0)*t
-      //   = 0.5*(v0 + vd + v0)*t
-      //   = 0.5*(2*v0 + vd)*t
-      //   = (v0 + 0.5*vd)*t
-      this.birdTop += (this.birdTopVelocity + 0.5 * birdTopVelocityDelta) * interpol;
-      this.birdTopVelocity = birdTopVelocityFinal;
-
-      this.pipeLeft -= this.pipeLeftVelocity * interpol;
-      if (this.pipeLeft < -50) {
-        const gapSizeDelta = 150 - this.gapSize;
-        this.pipeTopHeight = randomInt(25 - gapSizeDelta, 225 + gapSizeDelta);
-        this.pipeBotHeight = 400 - this.gapSize - this.pipeTopHeight;
-        this.pipeLeft = 400;
-        this.pipeScored = false;
-      }
-
-      if (!this.pipeScored) {
-        if (this.bird.offsetLeft > this.pipeLeft + this.pipeTop.clientWidth) {
-          this.score += 1;
-
-          if (this.score === 10) {
-            this.pipeLeftVelocity += 0.5;
-          } else if (this.score === 20) {
-            this.pipeLeftVelocity += 0.5;
-          } else if (this.score === 30) {
-            this.gapSize -= 10;
-          }
-
-          this.pipeScored = true;
-        }
-      }
-
-      if (this.detectBirdCollision()) {
-        return true;
+      if (this.birdTopVelocity < -this.birdVelocityMax) {
+        this.birdTopVelocity = -this.birdVelocityMax;
       }
     }
-    return false;
+
+    let birdTopVelocityDelta = this.birdGravity * interpol;
+    let birdTopVelocityFinal = this.birdTopVelocity + birdTopVelocityDelta;
+    if (birdTopVelocityFinal > this.birdVelocityMax) {
+      birdTopVelocityFinal = this.birdVelocityMax;
+      birdTopVelocityDelta = this.birdVelocityMax - this.birdTopVelocity;
+    }
+    // https://en.wikipedia.org/wiki/Equations_of_motion#Constant_translational_acceleration_in_a_straight_line
+    // Derived from Equation 3:
+    //   = 0.5*(v + v0)*t
+    //   = 0.5*(v0 + vd + v0)*t
+    //   = 0.5*(2*v0 + vd)*t
+    //   = (v0 + 0.5*vd)*t
+    this.birdTop += (this.birdTopVelocity + 0.5 * birdTopVelocityDelta) * interpol;
+    this.birdTopVelocity = birdTopVelocityFinal;
+
+    this.pipeLeft -= this.pipeLeftVelocity * interpol;
+    if (this.pipeLeft < -50) {
+      const gapSizeDelta = 150 - this.gapSize;
+      this.pipeTopHeight = randomInt(25 - gapSizeDelta, 225 + gapSizeDelta);
+      this.pipeBotHeight = 400 - this.gapSize - this.pipeTopHeight;
+      this.pipeLeft = 400;
+      this.pipeScored = false;
+    }
+
+    if (!this.pipeScored) {
+      if (this.bird.offsetLeft > this.pipeLeft + this.pipeTop.clientWidth) {
+        this.score += 1;
+
+        if (this.score === 10) {
+          this.pipeLeftVelocity += 0.5;
+        } else if (this.score === 20) {
+          this.pipeLeftVelocity += 0.5;
+        } else if (this.score === 30) {
+          this.gapSize -= 10;
+        }
+
+        this.pipeScored = true;
+      }
+    }
+
+    return this.detectBirdCollision();
   }
 
   render() {
@@ -222,15 +261,8 @@ class Game {
     this.fpsMeter.textContent = `${this.fps()}`.padStart(3, "0");
   }
 
-  birdJump() {
-    if (this.birdTopVelocity > 0) {
-      this.birdTopVelocity = this.birdFlapForce;
-    } else {
-      this.birdTopVelocity += this.birdFlapForce;
-    }
-    if (this.birdTopVelocity < -this.birdVelocityMax) {
-      this.birdTopVelocity = -this.birdVelocityMax;
-    }
+  jumpBird(now) {
+    this.birdJumps.push(now);
   }
 
   detectBirdCollision() {
@@ -267,14 +299,11 @@ class Game {
   }
 
   fps() {
-    if (!this.fpsa.length) {
-      return 0;
+    let fpsAcc = 0;
+    for (let i = 1; i < this.fpsa.length; i++) {
+      fpsAcc += 1000 / (this.fpsa[i].ts - this.fpsa[i - 1].ts);
     }
-    const fps =
-      this.fpsa.reduce((acc, el) => {
-        return acc + el.fps;
-      }, 0) / this.fpsa.length;
-    return Math.round(fps);
+    return Math.round(fpsAcc / (this.fpsa.length - 1));
   }
 }
 
