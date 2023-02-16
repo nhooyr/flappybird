@@ -47,6 +47,8 @@ I did not get to them all in my short presentation but these were my discussion 
 
 <img src="./pres/game-loop.svg">
 
+> Diagram generated from [./pres/game-loop.d2](./pres/game-loop.d2).
+
 - The bird falling from gravity in the shape of a parabola. Very relevant to them as they
   are learning (or going to be) about parabolas. Of the form `-0.075*x^2`. Kids always
   question if abstract math useful and here is an excellent example!
