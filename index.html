@@ -13,70 +13,59 @@
   <body>
     <!-- This div is purely for taking screenshots of the game. -->
     <div id="screenshot-container">
-      <details id="help">
-        <summary>help</summary>
-        <div id="help-contents">
-          <p>
-            Minimal HTML, CSS and JavaScript demo game based on:
-            <br />
-            <a href="https://en.wikipedia.org/wiki/Flappy_Bird"
-              >https://en.wikipedia.org/wiki/Flappy_Bird</a
-            >
-          </p>
-          <p>
-            You are the yellow square. Your goal is to jump through the pipes. You die if
-            you touch a pipe or fall to the ground.
-          </p>
-          <p>You gain a point every pipe you pass.</p>
-          <p>The game gets harder as you gain more points.</p>
-          <p>
-            The game is publicly hosted at:
-            <br />
-            <a href="https://nhooyr.github.io/flappy-bird"
-              >https://nhooyr.github.io/flappy-bird</a
-            >
-          </p>
-          <p>
-            The source code is available at:
-            <br />
-            <a href="https://github.com/nhooyr/flappy-bird"
-              >https://github.com/nhooyr/flappy-bird</a
-            >
-          </p>
-          <h4>Controls</h4>
-          <ol>
-            <li><p>Click, enter or tap to start.</p></li>
-            <li><p>Click, enter or tap to jump through the pipes.</p></li>
-            <li><p>Click, enter or tap to play again after dying.</p></li>
-          </ol>
-        </div>
-      </details>
-      <div id="game">
-        <div id="sky">
-          <div id="bird"></div>
-          <div id="pipe-top"></div>
-          <div id="pipe-bot"></div>
-          <div id="prompt"><p>Click, enter or tap to start.</p></div>
-        </div>
-        <div id="ground">
-          <div id="score-board" class="ground-col">
+      <header>
+        <details id="help">
+          <summary>Help</summary>
+          <div id="help-contents">
             <p>
-              Score:
-              <span id="score-board-n">000</span>
+              Minimal HTML, CSS and JavaScript demo game based on:
+              <br />
+              <a href="https://en.wikipedia.org/wiki/Flappy_Bird"
+                >https://en.wikipedia.org/wiki/Flappy_Bird</a
+              >
             </p>
             <p>
-              High Score:
-              <span id="high-score-board-n">000</span>
+              You are the yellow square. Your goal is to jump through the pipes. You die
+              if you touch a pipe or fall to the ground.
             </p>
+            <p>You gain a point every pipe you pass.</p>
+            <p>The game gets harder as you gain more points.</p>
+            <p>
+              The game is publicly hosted at:
+              <br />
+              <a href="https://nhooyr.github.io/flappy-bird"
+                >https://nhooyr.github.io/flappy-bird</a
+              >
+            </p>
+            <p>
+              The source code is available at:
+              <br />
+              <a href="https://github.com/nhooyr/flappy-bird"
+                >https://github.com/nhooyr/flappy-bird</a
+              >
+            </p>
+            <h4>Controls</h4>
+            <ol>
+              <li><p>Press enter or tap to start.</p></li>
+              <li><p>Press enter or tap to jump through the pipes.</p></li>
+              <li><p>Press enter or tap to play again after dying.</p></li>
+            </ol>
           </div>
-          <div id="fps-meter" class="ground-col">
-            <p>
-              FPS:
-              <span id="fps-meter-n">000</span>
-            </p>
-          </div>
-        </div>
+        </details>
+        <div id="fps-meter">FPS: <span id="fps-meter-n">000</span></div>
+      </header>
+      <div id="sky">
+        <div id="bird"></div>
+        <div id="pipe-top"></div>
+        <div id="pipe-bot"></div>
+        <div id="prompt"><p>Press enter or tap to start.</p></div>
       </div>
+      <footer>
+        <div id="score-board">
+          <div>Score: <span id="score-board-n">000</span></div>
+          <div>High Score: <span id="high-score-board-n">000</span></div>
+        </div>
+      </footer>
     </div>
   </body>
 </html>

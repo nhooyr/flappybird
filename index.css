@@ -24,15 +24,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
 }
 
-#game {
-  width: 400px;
+header {
   position: relative;
-
-  border: 2px solid Black;
-  border-top: none;
 }
 
 #help summary {
@@ -73,7 +68,16 @@ h4 {
   margin-bottom: 10px;
 }
 
+#fps-meter {
+  position: absolute;
+  top: 13px;
+  left: 81%;
+}
+
 #sky {
+  border: 2px solid Black;
+  border-top: none;
+
   width: 400px;
   height: 400px;
   position: relative;
@@ -82,37 +86,30 @@ h4 {
   background: LightSkyBlue;
 }
 
-#ground {
+footer {
   width: 400px;
   height: 75px;
 
-  border-top: 2px solid Black;
+  border: 2px solid Black;
+  border-top: none;
 
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
-#fps-meter {
-  height: 71px;
-  padding: 10px;
-  justify-content: end;
-  box-sizing: border-box;
-}
-
-.ground-col {
+#score-board {
+  height: 100%;
   display: flex;
+  justify-content: space-evenly;
   align-items: end;
   flex-direction: column;
-  padding: 10px;
-}
 
-.ground-col p {
-  margin-bottom: 0;
-}
-
-.ground-col p + p {
-  margin-top: 5px;
+  position: relative;
+  /* Perfectly centers score-board on Score: */
+  /* 400/2 - 77/2 = 162 */
+  /* 180 - 162 = 18 */
+  left: -18px;
 }
 
 #pipe-top {
@@ -177,9 +174,6 @@ h4 {
     background: Black;
     color: White;
   }
-  #game {
-    border-color: White;
-  }
   #help summary {
     border-color: White;
   }
@@ -187,11 +181,14 @@ h4 {
     background: Black;
     border-color: White;
   }
+  a {
+    color: #84d3f5;
+  }
+  a:visited {
+    color: #cc99ff;
+  }
   #sky {
     background: DarkSlateBlue;
-  }
-  #ground {
-    background: Black;
     border-color: White;
   }
   #pipe-top {
@@ -210,10 +207,8 @@ h4 {
     background: Black;
     border-color: White;
   }
-  a {
-    color: #84d3f5;
-  }
-  a:visited {
-    color: #cc99ff;
+  footer {
+    background: Black;
+    border-color: White;
   }
 }

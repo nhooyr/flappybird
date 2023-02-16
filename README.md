@@ -37,7 +37,6 @@ I did not get to them all in my short presentation but these were my discussion 
 - How the CSS works to position the elements and keep the game centered.
   Including on mobile.
   - How dark mode works.
-  - Why I only used a CSS class once.
 - How the game loop runs and handles both high refresh rates and lag.
   - How the FPS meter works.
   - The interpolation equation used for calculating the next point of the bird is derived

@@ -5,11 +5,13 @@ init();
 function init() {
   const help = document.getElementById("help");
   const helpButton = help.children[0];
+  const fpsMeter = document.getElementById("fps-meter");
+  const scoreBoard = document.getElementById("score-board");
 
   // Register Escape to close help if open.
-  // Register Enter to substitute for clicking.
-  // Register Space to substitute for clicking.
-  // Register ArrowUp to substitute for clicking.
+  // Register Enter to act as the primary input key.
+  // Register Space to substitute for Enter.
+  // Register ArrowUp to substitute for Enter.
   document.addEventListener("keydown", e => {
     switch (e.key) {
       case "Escape":
@@ -21,7 +23,7 @@ function init() {
       case "ArrowUp":
       case "Enter":
         e.preventDefault();
-        processInput();
+        handleFlapInput();
         break;
     }
   });
@@ -29,24 +31,28 @@ function init() {
   const highScoreBoard = document.getElementById("high-score-board-n");
   let highScore = restoreHighScoreBoard(highScoreBoard);
 
+  // Register click (tap on mobile causes click) to
   document.addEventListener("click", e => {
     if (e.target === document.body) {
-      // Click is to close help if help is open.
-      // Otherwise it's for the game.
+      // Normally click is for for the game.
+      // But click is to close help if help is open.
       if (help.open) {
         helpButton.click();
         return;
       }
-    }
-    if (e.target === helpButton) {
+    } else if (help.contains(e.target)) {
+      return;
+    } else if (fpsMeter.contains(e.target)) {
+      return;
+    } else if (scoreBoard.contains(e.target)) {
       return;
     }
 
-    processInput();
+    handleFlapInput();
   });
 
   let game;
-  const processInput = () => {
+  const handleFlapInput = () => {
     if (game) {
       game.birdFlapWings();
       return;
@@ -294,7 +300,7 @@ class Game {
 
   displayGameOverPrompt() {
     this.prompt.style.display = "block";
-    this.prompt.textContent = "Game Over! Click, enter or tap to play again.";
+    this.prompt.textContent = "Game Over! Press enter or tap to play again.";
   }
 
   fps() {
