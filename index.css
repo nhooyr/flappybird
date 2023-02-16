@@ -15,6 +15,7 @@ html {
 
 body {
   font-family: sans-serif;
+  line-height: 1;
 
   height: 100%;
   margin: 0;
@@ -27,34 +28,36 @@ body {
 }
 
 header {
-  position: relative;
-}
-
-#help summary {
   height: 45px;
   width: 404px;
   box-sizing: border-box;
   padding: 10px;
-  outline: none;
-
   border: 2px solid Black;
+  position: relative;
 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#help summary {
   text-decoration: underline;
   cursor: pointer;
 }
 
 #help-contents {
   width: 404px;
-  min-height: 402px;
+  min-height: 404px;
   box-sizing: border-box;
   position: absolute;
   z-index: 1;
   padding: 10px;
 
   border: 2px solid Black;
-  border-top: none;
   font-size: 14px;
   background: White;
+  left: -2px;
+  top: 41px;
 }
 
 ol p {
@@ -66,12 +69,6 @@ h4 {
   font-weight: normal;
   margin-top: 15px;
   margin-bottom: 10px;
-}
-
-#fps-meter {
-  position: absolute;
-  top: 13px;
-  left: 81%;
 }
 
 #sky {
@@ -174,7 +171,7 @@ footer {
     background: Black;
     color: White;
   }
-  #help summary {
+  header {
     border-color: White;
   }
   #help-contents {

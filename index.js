@@ -22,7 +22,9 @@ function init() {
       case " ":
       case "ArrowUp":
       case "Enter":
-        e.preventDefault();
+        if (help.contains(document.activeElement)) {
+          return;
+        }
         handleFlapInput();
         break;
     }
@@ -40,7 +42,7 @@ function init() {
         helpButton.click();
         return;
       }
-    } else if (help.contains(e.target)) {
+    } else if (helpButton.contains(e.target)) {
       return;
     } else if (fpsMeter.contains(e.target)) {
       return;
