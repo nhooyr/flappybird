@@ -32,7 +32,7 @@ body {
   min-height: 500px;
   position: relative;
 
-  border: 2px solid black;
+  border: 2px solid Black;
   border-top: none;
 }
 
@@ -43,7 +43,7 @@ body {
   padding: 10px;
   outline: none;
 
-  border: 2px solid black;
+  border: 2px solid Black;
 
   display: flex;
   align-items: center;
@@ -60,10 +60,10 @@ body {
   z-index: 1;
   padding: 10px;
 
-  border: 2px solid black;
+  border: 2px solid Black;
   border-top: none;
   font-size: 14px;
-  background: white;
+  background: White;
 }
 
 ol p {
@@ -83,14 +83,14 @@ h4 {
   position: relative;
   overflow: clip;
 
-  background: skyblue;
+  background: LightSkyBlue;
 }
 
 #ground {
   width: 400px;
   height: 100px;
 
-  border-top: 2px solid black;
+  border-top: 2px solid Black;
 
   display: flex;
   justify-content: space-between;
@@ -118,8 +118,8 @@ h4 {
   position: absolute;
   left: calc(400px - 52px);
 
-  background: seagreen;
-  border: 2px solid black;
+  background: Green;
+  border: 2px solid Black;
   border-top: none;
 }
 
@@ -130,8 +130,8 @@ h4 {
   left: calc(400px - 52px);
   bottom: 0px;
 
-  background: seagreen;
-  border: 2px solid black;
+  background: Green;
+  border: 2px solid Black;
   border-bottom: none;
 }
 
@@ -142,14 +142,15 @@ h4 {
   top: calc((400px / 2) - (25px / 2) - 30px);
   left: calc((400px / 2) - (25px / 2));
 
-  border: 2px solid black;
-  background: lightyellow;
+  border: 2px solid Black;
+  background: Yellow;
 }
 
 #prompt {
   min-width: 200px;
   max-width: 300px;
-  /* Not sure why this has to be explicitly set but it does. */
+  /* Not sure why this has to be explicitly set but it does.
+   * Can be removed if left: is removed. */
   width: max-content;
   position: absolute;
   top: calc(50% + 40px);
@@ -157,8 +158,8 @@ h4 {
   transform: translate(-50%, -50%);
   padding: 10px;
 
-  background: white;
-  border: 2px solid black;
+  background: White;
+  border: 2px solid Black;
   text-align: center;
 
   line-height: 1.4;
@@ -170,41 +171,39 @@ h4 {
 
 @media (prefers-color-scheme: dark) {
   body {
-    background: black;
-    color: white;
+    background: Black;
+    color: White;
   }
   #game {
-    border-color: white;
+    border-color: White;
   }
   #help summary {
-    border-color: white;
+    border-color: White;
   }
   #help-contents {
-    background: black;
-    border-color: white;
+    background: Black;
+    border-color: White;
   }
   #sky {
-    background: MediumSlateBlue;
+    background: DeepSkyBlue;
   }
   #ground {
-    background: black;
-    border-color: white;
+    background: Black;
+    border-color: White;
   }
   #pipe-top {
-    background: green;
-    border-color: white;
+    border-color: White;
   }
   #pipe-bot {
-    background: green;
-    border-color: white;
+    border-color: White;
   }
   #bird {
     background: #ff0066;
-    border-color: white;
+    border-color: White;
   }
   #prompt {
-    background: black;
-    border-color: white;
+    background: Black;
+    border-color: White;
   }
   a {
     color: #84d3f5;
