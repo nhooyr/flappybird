@@ -109,8 +109,8 @@ class Game {
     // So negative velocity is up and positive is down.
     this.birdVelocityY = 0;
 
-    this.pipeTopHeight = 125;
-    this.pipeBotHeight = 125;
+    this.pipeTopHeight = 100;
+    this.pipeBotHeight = 150;
     // Kept in sync with the CSS.
     this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth - 2;
 
