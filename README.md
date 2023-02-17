@@ -123,7 +123,7 @@ in a free-form format.
 - Canvas being a more performant real world option for writing games due to its GPU
   acceleration. This demo was written purely for educational purposes on how HTML, CSS and
   JavaScript integrate.
-  - I have noticed a bit of lag on my 2020 amd64 13" MacBook Pro but it runs buttery smooth
+  - I have noticed stuttering on my 2020 amd64 13" MacBook Pro but it runs buttery smooth
     on my Samsung Galaxy Note20 Ultra at 120 Hz.
 
 ## Footer
