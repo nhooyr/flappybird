@@ -295,7 +295,7 @@ class Game {
       }
     }
 
-    return this.detectBirdCollision();
+    return this.detectBirdCollisions();
   }
 
   render() {
@@ -323,11 +323,7 @@ class Game {
     }
   }
 
-  detectBirdCollision() {
-    if (this.bird.offsetHeight + this.bird.offsetTop > this.sky.offsetHeight) {
-      // ground collision
-      return true;
-    }
+  detectBirdCollisions() {
     if (
       !(
         this.bird.offsetTop >= this.pipeTop.offsetTop + this.pipeTop.offsetHeight ||

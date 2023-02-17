@@ -95,7 +95,7 @@ in a free-form format.
   are learning (or going to be) about parabolas. Of the form `-0.075*x^2`. Kids always
   question if abstract math useful and here is an excellent example!
 - The coordinate system being upside down in computer graphics compared to math.
-- How collisions are detected between the bird, ground and pipes.
+- How collisions are detected between the bird and pipes.
 - How the randomly sized pipes are generated.
 - How the high score is persisted between page loads.
 - How the prompt is displayed and hidden.
