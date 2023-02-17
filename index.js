@@ -109,8 +109,8 @@ class Game {
     // So negative velocity is up and positive is down.
     this.birdVelocityY = 0;
 
-    this.pipeTopHeight = 100;
-    this.pipeBotHeight = 150;
+    this.pipeTopHeight = 125;
+    this.pipeBotHeight = 125;
     // Kept in sync with the CSS.
     this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth - 2;
 
@@ -273,7 +273,7 @@ class Game {
     this.pipeLeft -= this.pipeVelocityX * interpol;
     if (this.pipeLeft < -50) {
       const gapSizeDelta = 150 - this.gapSize;
-      this.pipeTopHeight = randomInt(25 - gapSizeDelta, 225 + gapSizeDelta);
+      this.pipeTopHeight = randomInt(10 - gapSizeDelta, 240 + gapSizeDelta);
       this.pipeBotHeight = 400 - this.gapSize - this.pipeTopHeight;
       this.pipeLeft = 400;
       this.pipeScored = false;
