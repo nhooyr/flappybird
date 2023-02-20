@@ -60,7 +60,7 @@ class Game {
 
     this.fpsaThreshold = 4000;
 
-    this.lastRenderTime = undefined;
+    this.prevRenderTime = undefined;
   }
 
   loadHighScore() {
@@ -95,6 +95,8 @@ class Game {
       pipeElements[2].offsetLeft - pipeElements[0].offsetLeft - pipeElements[0].offsetWidth;
   }
 
+  // TODO: prevState
+  // TODO: birdHeight/width and pipeHeight/width to prevent DOM access entirely in step
   render() {
     this.birdEl.style.top = `${this.state.birdX}px`;
     for (p of this.state.pipes) {
@@ -200,12 +202,12 @@ class Game {
   }
 
   _step(now) {
-    if (!this.lastRenderTime) {
-      this.lastRenderTime = now;
+    if (!this.prevRenderTime) {
+      this.prevRenderTime = now;
       return this.stepOne(now, 1);
     }
 
-    if (now === this.lastRenderTime) {
+    if (now === this.prevRenderTime) {
       // A microsecond has not yet elapsed.
       // performance.now() may be a float with whole milliseconds but has a microsecond
       // the fractional portion too. See
@@ -214,17 +216,17 @@ class Game {
       // for fuzzing as described in the above docs.
       return false;
     }
-    if (now < this.lastRenderTime) {
+    if (now < this.prevRenderTime) {
       // Sanity check. Was occuring previously when I was directly calling stepCB.
       // See comment there.
       throw new Error(
-        `time flew backwards? lastRenderTime: ${this.lastRenderTime} > now: ${now}`
+        `time flew backwards? prevRenderTime: ${this.prevRenderTime} > now: ${now}`
       );
     }
 
     let interpol = 1;
     for (
-      let i = this.lastRenderTime + this.timeUnitVelocity;
+      let i = this.prevRenderTime + this.timeUnitVelocity;
       i < now + this.timeUnitVelocity;
       i += this.timeUnitVelocity
     ) {
@@ -256,7 +258,7 @@ class Game {
         return gameOver;
       }
     }
-    this.lastRenderTime = now;
+    this.prevRenderTime = now;
     return false;
   }
 
