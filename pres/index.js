@@ -1,10 +1,9 @@
 "use strict";
 
-init();
 function init() {
   console.info(`Help:
-- Press -> for next slide.
-- Press <- for previous slide.
+- Press right arrow for next slide.
+- Press left arrow for previous slide.
 - Click for next slide.
 - Right click for previous slide.
 - Tap for next slide.
@@ -112,3 +111,5 @@ function addEventListeners() {
     prev();
   });
 }
+
+init();

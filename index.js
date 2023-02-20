@@ -1,124 +1,123 @@
 "use strict";
 
-init();
 function init() {
-  const help = document.getElementById("help");
-  const helpButton = help.children[0];
-  const fpsMeter = document.getElementById("fps-meter");
-  const scoreBoard = document.getElementById("score-board");
-
-  // Register Escape to close help if open.
-  // Register Enter to act as the primary input key.
-  // Register Space to substitute for Enter.
-  // Register ArrowUp to substitute for Enter.
-  document.addEventListener("keydown", e => {
-    switch (e.key) {
-      case "Escape":
-        if (help.open) {
-          helpButton.click();
-        }
-        break;
-      case " ":
-      case "ArrowUp":
-      case "Enter":
-        if (help.contains(document.activeElement)) {
-          return;
-        }
-        handleFlapInput();
-        break;
-    }
-  });
-
-  const highScoreBoard = document.getElementById("high-score-board-n");
-  let highScore = restoreHighScoreBoard(highScoreBoard);
-
-  // Register click (tap on mobile causes click) to
-  document.addEventListener("click", e => {
-    if (e.target === document.body) {
-      // Normally click is for for the game.
-      // But click is to close help if help is open.
-      if (help.open) {
-        helpButton.click();
-        return;
-      }
-    } else if (helpButton.contains(e.target)) {
-      return;
-    } else if (fpsMeter.contains(e.target)) {
-      return;
-    } else if (scoreBoard.contains(e.target)) {
-      return;
-    }
-
-    handleFlapInput();
-  });
-
-  let game;
-  const handleFlapInput = () => {
-    if (game) {
-      game.birdFlapWingsInput();
-      return;
-    }
-
-    highScore = restoreHighScoreBoard(highScoreBoard);
-    game = new Game();
-    const stepCB = now => {
-      const gameOver = game.step(now);
-      game.render();
-      if (highScore < game.score) {
-        localStorage.setItem("flappybird-high-score", game.score);
-      }
-      if (gameOver) {
-        game = undefined;
-        return;
-      }
-      requestAnimationFrame(stepCB);
-    };
-    // We do not call stepCB directly here with performance.now() as we need now to be
-    // guaranteed to be moving forward. requestAnimationFrame caches now for the frame and
-    // so if you call stepCB here directly then the requestAnimationFrame in stepCB will
-    // almost immediately get called back with an older cached now.
-    requestAnimationFrame(stepCB);
-  };
-}
-
-function restoreHighScoreBoard(highScoreBoard) {
-  let highScore = localStorage.getItem("flappybird-high-score");
-  if (highScore) {
-    highScoreBoard.textContent = `${highScore}`.padStart(3, "0");
-    return highScore;
-  } else {
-    localStorage.setItem("flappybird-high-score", 0);
-    return 0;
-  }
+  const g = new Game(window.document);
+  g.loadHighScore();
+  g.storeInitialState();
+  console.info(g.initialState);
+  return;
+  g.addEventListeners();
 }
 
 class Game {
-  constructor() {
+  constructor(document) {
+    this.promptEl = document.getElementById("prompt");
+    this.skyEl = document.getElementById("sky");
+    this.birdEl = document.getElementById("bird");
+    this.scoreEl = document.getElementById("score-board-n");
+    this.scoreBoardEl = document.getElementById("score-board");
+    this.highScoreEl = document.getElementById("high-score-board-n");
+    this.fpsMeterEl = document.getElementById("fps-meter-n");
+    this.helpEl = document.getElementById("help");
+    this.helpButtonEl = help.children[0];
+  }
+
+  loadHighScore() {
+    this.highScore = localStorage.getItem("flappybird-high-score");
+    if (this.highScore) {
+      this.highScoreEl.textContent = `${this.highScore}`.padStart(3, "0");
+    } else {
+      this.highScore = 0;
+      localStorage.setItem("flappybird-high-score", 0);
+    }
+  }
+
+  storeInitialState() {
+    const pipeTopOneEl = document.getElementById("pipe-top-1");
+    const pipeTopTwoEl = document.getElementById("pipe-top-2");
+
+    const pipes = [
+      {
+        topHeight: pipeTopOneEl.offsetHeight,
+        left: pipeTopOneEl.offsetLeft,
+      },
+      {
+        topHeight: pipeTopTwoEl.offsetHeight,
+        left: pipeTopTwoEl.offsetLeft,
+      },
+    ];
+
+    const pipeBotOneEl = document.getElementById("pipe-bot-1");
+    const pipeGapHeight =
+      this.skyEl.scrollHeight - pipeTopOneEl.offsetHeight - pipeBotOneEl.offsetHeight;
+    const pipeIntervalWidth =
+      pipeTopTwoEl.offsetLeft - pipeTopOneEl.offsetLeft - pipeTopOneEl.offsetWidth;
+
+    if (pipeGapHeight !== 140) {
+      throw new Error("unexpected pipe gap height");
+    }
+    if (pipeIntervalWidth !== 145) {
+      throw new Error("unexpected pipe interval width");
+    }
+
+    this.initialState = {
+      birdTop: this.birdEl.offsetTop,
+      pipes,
+      pipeGapHeight,
+      pipeIntervalWidth,
+    };
+  }
+
+  newGame() {
+    this.prompt.style.display = "none";
+  }
+
+  constructor2() {
+    /*
+     * The following fields are kept in sync with the html element CSS variables.
+     */
+
+    // The ones on this are adjusted in our levels.
+    this.pipeGapHeight = 140;
+    this.pipeSpacingWidth = 146;
+    this.pipeVelocityX = 2;
+
+    // TODO: this doesn't require sync...
+    // TODO: read this once at init separate and pass them into Game somehow.
+    this.pipes = [
+      {
+        top: document.getElementById("pipe-top-1"),
+        bot: document.getElementById("pipe-bot-1"),
+        scored: true,
+      },
+      {
+        top: document.querySelector("pipe-top-2"),
+        bot: document.querySelector("pipe-bot-2"),
+        scored: false,
+      },
+    ];
+
+    (this.pipes[0].left = this.sky.offsetWidth - this.pipes[0].top.offsetWidth - 2),
+      (this.birdTop =
+        this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - initialBirdOffset);
+
+    /*
+     * End of fields kept in sync with CSS.
+     */
+
     this.prompt = document.getElementById("prompt");
     this.prompt.style.display = "none";
     this.sky = document.getElementById("sky");
     this.bird = document.getElementById("bird");
-    this.pipeTop = document.getElementById("pipe-top");
-    this.pipeBot = document.getElementById("pipe-bot");
+
     this.scoreBoard = document.getElementById("score-board-n");
     this.fpsMeter = document.getElementById("fps-meter-n");
 
-    // Kept in sync with the CSS.
-    this.birdTop = this.sky.offsetHeight / 2 - this.bird.offsetHeight / 2 - 30;
-    // Remember this is the opposite of math as the origin at the top.
+    // Remember this is the opposite of math as the origin is at the top.
     // So negative velocity is up and positive is down.
     this.birdVelocityY = 0;
 
-    this.pipeTopHeight = 100;
-    this.pipeBotHeight = 150;
-    // Kept in sync with the CSS.
-    this.pipeLeft = this.sky.offsetWidth - this.pipeTop.offsetWidth - 2;
-
-    // These two are adjusted in our 3 levels.
-    this.pipeVelocityX = 2;
-    this.gapSize = 150;
-
-    // These next four fields could all be static but I made them regular fields so that
+    // These next fields could all be static but I made them regular fields so that
     // students can adjust them for their own levels.
 
     // timeUnitVelocity evalutes to about 16.67 milliseconds. And so about 60 time units
@@ -136,7 +135,6 @@ class Game {
     this.birdFlapForce = -4;
 
     this.birdFlapInputs = [];
-    this.pipeScored = false;
     this.score = 0;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
     this.lastStepTime;
@@ -144,6 +142,91 @@ class Game {
     this.fpsa = [];
 
     this.render();
+  }
+
+  addEventListeners() {
+    const help = document.getElementById("help");
+    const helpButton = help.children[0];
+
+    // Register Escape to close help if open.
+    // Register Enter to act as the primary input key.
+    // Register Space to substitute for Enter.
+    // Register ArrowUp to substitute for Enter.
+    document.addEventListener("keydown", e => {
+      switch (e.key) {
+        case "Escape":
+          if (help.open) {
+            helpButton.click();
+          }
+          break;
+        case " ":
+        case "ArrowUp":
+        case "Enter":
+          if (help.contains(document.activeElement)) {
+            return;
+          }
+          handleFlapInput();
+          break;
+      }
+    });
+
+    const highScoreBoard = document.getElementById("high-score-board-n");
+    let highScore = restoreHighScoreBoard(highScoreBoard);
+
+    const birdEl = document.getElementById("bird");
+    const initialGame = readInitialState(birdEl);
+    console.info(initialGame);
+    return;
+
+    const fpsMeter = document.getElementById("fps-meter");
+    const scoreBoard = document.getElementById("score-board");
+    // Register click (tap on mobile causes click) to
+    document.addEventListener("click", e => {
+      if (e.target === document.body) {
+        // Normally click is for for the game.
+        // But click is to close help if help is open.
+        if (help.open) {
+          helpButton.click();
+          return;
+        }
+      } else if (helpButton.contains(e.target)) {
+        return;
+      } else if (fpsMeter.contains(e.target)) {
+        return;
+      } else if (scoreBoard.contains(e.target)) {
+        return;
+      }
+
+      handleFlapInput();
+    });
+
+    let game;
+    const handleFlapInput = () => {
+      if (game) {
+        game.birdFlapWingsInput();
+        return;
+      }
+
+      highScore = restoreHighScoreBoard(highScoreBoard);
+      game = new Game();
+      const stepCB = now => {
+        const gameOver = game.step(now);
+        game.render();
+        if (highScore < game.score) {
+          localStorage.setItem("flappybird-high-score", game.score);
+        }
+        if (gameOver) {
+          game = undefined;
+          return;
+        }
+        requestAnimationFrame(stepCB);
+      };
+      // We do not call stepCB directly here with performance.now() as we need now to be
+      // guaranteed to be moving forward. requestAnimationFrame caches now for the frame and
+      // so if you call stepCB here directly then the requestAnimationFrame in stepCB will
+      // almost immediately get called back with an older cached now.
+      requestAnimationFrame(stepCB);
+    };
   }
 
   step(now) {
@@ -224,7 +307,7 @@ class Game {
     const timeUnitInputs = this.birdFlapInputs.filter(v => {
       return v.ts <= now;
     });
-    this.birdFlapInputs.splice(0, timeUnitInputs.length);
+    timeUnitInputs = this.birdFlapInputs.splice(0, timeUnitInputs.length);
 
     // We break up the time unit being stepped through for each input to process
     // each input at the exact time at which it came in.
@@ -270,28 +353,28 @@ class Game {
     this.birdTop += (this.birdVelocityY + 0.5 * birdVelocityYDelta) * interpol;
     this.birdVelocityY = birdVelocityYFinal;
 
-    this.pipeLeft -= this.pipeVelocityX * interpol;
-    if (this.pipeLeft < -50) {
-      const gapSizeDelta = 150 - this.gapSize;
-      this.pipeTopHeight = randomInt(10 - gapSizeDelta, 240 + gapSizeDelta);
-      this.pipeBotHeight = 400 - this.gapSize - this.pipeTopHeight;
-      this.pipeLeft = 400;
-      this.pipeScored = false;
+    this.pipes[0].left -= this.pipeVelocityX * interpol;
+    if (this.pipes[0].left < -this.pipes[0].top.offsetWidth) {
+      this.pipes[0].topHeight = randomInt(10, 400 - this.pipeGapHeight - 10);
+      this.pipes[0].botHeight = 400 - this.pipeGapHeight - this.pipes[0].topHeight;
+      this.pipes[0].left = 400;
+      this.pipes[0].scored = false;
     }
 
-    if (!this.pipeScored) {
-      if (this.bird.offsetLeft > this.pipeLeft + this.pipeTop.clientWidth) {
+    if (!this.pipes[0].scored) {
+      if (this.bird.offsetLeft > this.pipes[0].left + this.pipes[0].top.scrollWidth) {
         this.score += 1;
 
-        if (this.score === 10) {
+        if (this.score === 5) {
           this.pipeVelocityX += 0.5;
-        } else if (this.score === 20) {
-          this.pipeVelocityX += 0.5;
-        } else if (this.score === 30) {
-          this.gapSize -= 10;
+        } else if (this.score === 50) {
+          this.pipeVelocityX += 0.25;
+        } else if (this.score === 100) {
+          this.pipeVelocityX += 0.25;
+          this.pipeGapHeight -= 10;
         }
 
-        this.pipeScored = true;
+        this.pipes[0].scored = true;
       }
     }
 
@@ -300,10 +383,10 @@ class Game {
 
   render() {
     this.bird.style.top = `${this.birdTop}px`;
-    this.pipeTop.style.height = `${this.pipeTopHeight}px`;
-    this.pipeBot.style.height = `${this.pipeBotHeight}px`;
-    this.pipeTop.style.left = `${this.pipeLeft}px`;
-    this.pipeBot.style.left = `${this.pipeLeft}px`;
+    this.pipes[0].top.style.height = `${this.pipes[0].topHeight}px`;
+    this.pipes[0].bot.style.height = `${this.pipes[0].botHeight}px`;
+    this.pipes[0].top.style.left = `${this.pipes[0].left}px`;
+    this.pipes[0].bot.style.left = `${this.pipes[0].left}px`;
     this.scoreBoard.textContent = `${this.score}`.padStart(3, "0");
     this.fpsMeter.textContent = `${this.fps()}`.padStart(3, "0");
   }
@@ -323,25 +406,29 @@ class Game {
     }
   }
 
+  // https://stackoverflow.com/a/402019
   detectBirdCollisions() {
     if (
       !(
-        this.bird.offsetTop >= this.pipeTop.offsetTop + this.pipeTop.offsetHeight ||
-        this.bird.offsetLeft + this.bird.offsetWidth <= this.pipeTop.offsetLeft ||
-        this.bird.offsetLeft >= this.pipeTop.offsetLeft + this.pipeTop.offsetWidth
+        this.bird.offsetTop >=
+          this.pipes[0].top.offsetTop + this.pipes[0].top.offsetHeight ||
+        this.bird.offsetLeft + this.bird.offsetWidth <= this.pipes[0].top.offsetLeft ||
+        this.bird.offsetLeft >=
+          this.pipes[0].top.offsetLeft + this.pipes[0].top.offsetWidth
       )
     ) {
-      // pipeTop collision
+      // top collision
       return true;
     }
     if (
       !(
-        this.bird.offsetTop + this.bird.offsetHeight <= this.pipeBot.offsetTop ||
-        this.bird.offsetLeft + this.bird.offsetWidth <= this.pipeBot.offsetLeft ||
-        this.bird.offsetLeft >= this.pipeBot.offsetLeft + this.pipeBot.offsetWidth
+        this.bird.offsetTop + this.bird.offsetHeight <= this.pipes[0].bot.offsetTop ||
+        this.bird.offsetLeft + this.bird.offsetWidth <= this.pipes[0].bot.offsetLeft ||
+        this.bird.offsetLeft >=
+          this.pipes[0].bot.offsetLeft + this.pipes[0].bot.offsetWidth
       )
     ) {
-      // pipeBot collision
+      // bot collision
       return true;
     }
     return false;
@@ -364,6 +451,9 @@ class Game {
   }
 }
 
+// Returns a random integer x with min <= x <= max.
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+init();

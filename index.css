@@ -104,43 +104,67 @@ footer {
 
   position: relative;
   /* Perfectly centers score-board on Score: */
-  /* 400/2 - 77/2 = 162 */
-  /* 180 - 162 = 18 */
-  left: -18px;
+  /* 400/2 - 78/2 = 161 */
+  /* 161 - (643-498+37) = -21 */
+  left: -21px;
+  /* Can confirm afterwards the position is 622-498+37 = 161px.
+   * Numbers obtained from offsetLeft on footer, score-board and score div.
+   * I also visually confirmed by removing highscore and the left above and
+   * confirming that score only moves down and not side to side upon reload. */
 }
 
-#pipe-top {
-  width: 50px;
-  height: 100px;
+.pipe {
+  width: 55px;
+  box-sizing: border-box;
   position: absolute;
-  left: calc(400px - 52px);
 
   background: MediumAquamarine;
   border: 2px solid Black;
+
+  --pipe-gap-height: 140px;
+  /* (400-55-55)/2 = 145 */
+  --pipe-interval-width: 145px;
+}
+
+.pipe-top {
   border-top: none;
 }
 
-#pipe-bot {
-  width: 50px;
-  height: 150px;
-  position: absolute;
-  left: calc(400px - 52px);
+.pipe-bot {
   bottom: 0px;
-
-  background: MediumAquamarine;
-  border: 2px solid Black;
   border-bottom: none;
+}
+
+#pipe-top-1 {
+  height: 140px;
+  left: 130px;
+}
+
+#pipe-bot-1 {
+  height: calc(400px - 140px - var(--pipe-gap-height));
+  left: 130px;
+}
+
+#pipe-top-2 {
+  height: 110px;
+  left: calc(130px + 55px + var(--pipe-interval-width));
+}
+
+#pipe-bot-2 {
+  height: calc(400px - 110px - var(--pipe-gap-height));
+  left: calc(130px + 55px + var(--pipe-interval-width));
 }
 
 #bird {
   height: 25px;
   width: 25px;
   position: absolute;
-  top: calc((402px / 2) - (29px / 2) - 30px);
+  top: calc((402px / 2) - (29px / 2) - 20px);
   left: calc((402px / 2) - (29px / 2));
 
   border: 2px solid Black;
   background: LemonChiffon;
+  border-radius: 50%;
 }
 
 #prompt {
@@ -188,11 +212,11 @@ footer {
     background: DarkSlateBlue;
     border-color: White;
   }
-  #pipe-top {
+  .pipe-top {
     background: LightSeaGreen;
     border-color: White;
   }
-  #pipe-bot {
+  .pipe-bot {
     background: LightSeaGreen;
     border-color: White;
   }

@@ -25,8 +25,13 @@
               >
             </p>
             <p>
-              You are the yellow square. Your goal is to jump through the pipes. You die
-              if you touch a pipe.
+              You are the yellow circle flying in the sky. Your goal is to jump through
+              the pipes. You die if you touch a pipe.
+            </p>
+            <p>
+              You can fly above and below the borders of the game though pipes extend
+              north into space and south into the ground and so there is no way to avoid a
+              collision with them without going through their gap.
             </p>
             <p>You gain a point every pipe you pass.</p>
             <p>The game gets harder as you gain more points.</p>
@@ -47,7 +52,7 @@
             <h4>Controls</h4>
             <ol>
               <li><p>Press enter or tap to start.</p></li>
-              <li><p>Press enter or tap to jump through the pipes.</p></li>
+              <li><p>Press enter or tap to jump.</p></li>
               <li><p>Press enter or tap to play again after dying.</p></li>
             </ol>
           </div>
@@ -56,9 +61,11 @@
       </header>
       <div id="sky">
         <div id="bird"></div>
-        <div id="pipe-top"></div>
-        <div id="pipe-bot"></div>
         <div id="prompt"><p>Press enter or tap to start.</p></div>
+        <div id="pipe-top-1" class="pipe pipe-top"></div>
+        <div id="pipe-bot-1" class="pipe pipe-bot"></div>
+        <div id="pipe-top-2" class="pipe pipe-top"></div>
+        <div id="pipe-bot-2" class="pipe pipe-bot"></div>
       </div>
       <footer>
         <div id="score-board">

@@ -109,6 +109,8 @@ in a free-form format.
   - Make the game easier.
   - Change the colors.
   - Increase the maximum velocity of the bird.
+  - Decrease the interval width between pipes.
+  - Increase the width of the pipes.
   - How many difficulty levels are there?
     - When are they reached?
     - What attributes of the game do they modify?
