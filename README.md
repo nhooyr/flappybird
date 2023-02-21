@@ -114,6 +114,7 @@ in a free-form format.
   - How many difficulty levels are there?
     - When are they reached?
     - What attributes of the game do they modify?
+  - How might a pause button be added?
 - Best game strategies?
   - Taping space and enter at the same time for a super fast double jump.
   - Moving the bird to just below the middle after each pipe. So you can respond adequately

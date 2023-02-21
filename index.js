@@ -1,16 +1,22 @@
 "use strict";
 
 function init() {
-  const g = new Game(window.document);
-  g.loadHighScore();
-  g.storeInitialState();
+  const g = new Game(window.document, window.localStorage);
+  g.readInitialState();
   g.addEventListeners();
+  // TODO: wrong only animate when g.alive = true
+  // We do not call animate directly here with performance.now() as we need now to be
+  // guaranteed to be moving forward. requestAnimationFrame caches now for the frame and
+  // so if you call animate here directly then the requestAnimationFrame in animate will
+  // almost immediately get called back with an older cached now.
+  requestAnimationFrame(g.animate.bind(g));
 }
 
 class Game {
   // Many of the fields defined here could be static but I kept them as instance fields
   // to allow students to adjust game attributes on different levels.
-  constructor(document) {
+  constructor(document, localStorage) {
+    this.alive = false;
     this.document = document;
 
     this.helpEl = this.document.getElementById("help");
@@ -26,27 +32,30 @@ class Game {
     this.fpsMeterEl = this.document.getElementById("fps-meter");
     this.fpsEl = this.document.getElementById("fps-meter-n");
 
-    // See start().
-    this.state = {};
-    // See storeInitialState().
-    this.initialState = undefined;
-    this.pipeGapHeight = undefined;
-    this.pipeIntervalWidth = undefined;
+    this.renderState = {};
+    this.prevRenderState = {};
 
-    // TODO:
-    this.state.score = 0;
-    this.state.birdVelocityY = 0;
-    // fpsa tracks the timestamp of every frame in the last 4 seconds.
-    this.state.fpsa = [];
+    // See readInitialState for full structure.
+    this.initialState = {
+      birdVelocityY: 0,
+      birdVelocityYMax: 6,
+      // Path of the parabola -0.075*x^2.
+      birdGravity: 0.15,
+      birdFlapForce: -4,
+      pipeVelocityX: 2,
+    };
+    this.state = {}
 
-    this.highScore = 0;
-    this.pipeVelocityX = 2;
+    const highScore = localStorage.getItem("flappybird-high-score");
+    if (highScore) {
+      this.state.highScore = highScore;
+      this.highScoreEl.textContent = `${highScore}`.padStart(3, "0");
+    } else {
+      this.state.highScore = 0;
+      localStorage.setItem("flappybird-high-score", this.state.highScore);
+    }
 
-    this.birdVelocityYMax = 6;
-    // Path of the parabola -0.075*x^2.
-    this.birdGravity = 0.15;
-    this.birdFlapForce = -4;
-    this.birdFlapInputs = [];
+    this.state.prompt = promptEl.textContent;
 
     // timeUnitVelocity evalutes to about 16.67 milliseconds. And so about 60 time units
     // fit into a second. A time unit is the maximum duration after which a collision is
@@ -57,49 +66,54 @@ class Game {
     // time units for high refresh rate displays. e.g. try setting this to 30 time units a
     // second instead and see what effect it has.
     this.timeUnitVelocity = Math.round(Math.floor(1000 / 60) * 100) / 100;
+    this.birdFlapInputs = [];
 
+    // fpsa tracks the timestamp of every frame in the last 4 seconds.
+    this.fpsa = [];
     this.fpsaThreshold = 4000;
 
-    this.prevRenderTime = undefined;
+    this.prevRenderTimeStamp = undefined;
   }
 
-  loadHighScore() {
-    const highScore = localStorage.getItem("flappybird-high-score");
-    if (highScore) {
-      this.highScoreEl.textContent = `${highScore}`.padStart(3, "0");
-      this.highScore = highScore;
-    } else {
-      localStorage.setItem("flappybird-high-score", this.highScore);
-    }
-  }
-
-  storeInitialState() {
+  // TODO: set prevRenderState too.
+  readInitialState() {
     const pipeElements = this.document.querySelectorAll(".pipe")
 
     this.initialState = {
-      birdX: this.birdEl.offsetTop,
+      bird: {
+        diameter: this.birdEl.offsetWidth,
+        top: this.birdEl.offsetTop,
+      },
       pipes: [],
     };
     for (let i = 0; i < pipeElements.length; i += 2) {
       const roofEl = pipeElements[i]
+      const floorEl = pipeElements[i+1]
       this.initialState.pipes.push({
-        roofHeight: roofEl.offsetHeight,
         left: roofEl.offsetLeft,
+        roofHeight: roofEl.offsetHeight,
+        floorHeight: floorEl.offsetHeight,
+        width: roofEl.offsetWidth,
         scored: roofEl.offsetLeft + roofEl.offsetWidth < this.birdEl.offsetLeft,
       })
     }
 
-    this.pipeGapHeight =
+    this.initialState.pipeGapHeight =
       this.skyEl.scrollHeight - pipeElements[0].offsetHeight - pipeElements[1].offsetHeight;
-    this.pipeIntervalWidth =
+    this.initialState.pipeIntervalWidth =
       pipeElements[2].offsetLeft - pipeElements[0].offsetLeft - pipeElements[0].offsetWidth;
   }
 
-  // TODO: prevState
-  // TODO: birdHeight/width and pipeHeight/width to prevent DOM access entirely in step
   render() {
-    this.birdEl.style.top = `${this.state.birdX}px`;
-    for (p of this.state.pipes) {
+    if (this.renderState.birdX !== this.prevRenderState.birdX) {
+      this.birdEl.style.top = `${this.renderState.birdX}px`;
+    }
+    for (p of this.renderState.pipes) {
+      if (p.reclaim) {
+        // TODO:
+        throw new Error("TODO");
+      }
+
       if (p.roofEl) {
         p.roofEl.style.left = `${p.left}px`;
         p.floorEl.style.left = `${p.left}px`;
@@ -107,13 +121,35 @@ class Game {
         // TODO: create pipe
       }
     }
-    this.scoreEl.textContent = `${this.score}`.padStart(3, "0");
-    this.fpsEl.textContent = `${this.fps()}`.padStart(3, "0");
+    if (this.renderState.score !== this.prevRenderState.score) {
+      this.scoreEl.textContent = `${this.renderState.score}`.padStart(3, "0");
+    }
+    if (this.renderState.fps !== this.prevRenderState.fps) {
+      this.fpsEl.textContent = `${this.renderState.fps}`.padStart(3, "0");
+    }
+    if (this.renderState.prompt !== this.prevRenderState.prompt) {
+      if (this.renderState.prompt) {
+        this.prompt.style.display = "block";
+        this.promptEl.textContent = this.renderState.prompt;
+      } else {
+        this.prompt.style.display = "none";
+      }
+    }
+    if (this.renderState.highScore !== this.prevRenderState.highScore) {
+      this.highScoreEl.textContent = `${this.renderState.highScore}`.padStart(3, "0");
+    }
   }
 
-  start() {
+  new() {
+    // TODO:
+    this.prevRenderState.score = 0;
+    this.birdVelocityY = 0;
+    this.prevRenderState.prompt = promptEl.textContent;
+
+    this.renderState.prompt = undefined;
     this.prompt.style.display = "none";
     this.scoreEl.textContent = `${this.score}`.padStart(3, "0");
+    this.fpsa.length = 0;
   }
 
   addEventListeners() {
@@ -166,26 +202,19 @@ class Game {
       game.birdFlapWingsInput();
       return;
     }
+  }
 
-    highScore = restoreHighScoreBoard(highScoreBoard);
-    game = new Game();
-    const stepCB = now => {
-      const gameOver = game.step(now);
-      game.render();
-      if (highScore < game.score) {
-        localStorage.setItem("flappybird-high-score", game.score);
-      }
-      if (gameOver) {
-        game = undefined;
-        return;
-      }
-      requestAnimationFrame(stepCB);
-    };
-    // We do not call stepCB directly here with performance.now() as we need now to be
-    // guaranteed to be moving forward. requestAnimationFrame caches now for the frame and
-    // so if you call stepCB here directly then the requestAnimationFrame in stepCB will
-    // almost immediately get called back with an older cached now.
-    requestAnimationFrame(stepCB);
+  animate() {
+    const gameOver = game.step(now);
+    game.render();
+    if (highScore < game.score) {
+      localStorage.setItem("flappybird-high-score", game.score);
+    }
+    if (gameOver) {
+      game = undefined;
+      return;
+    }
+    requestAnimationFrame(this.animate.bind(this));
   }
 
   step(now) {
@@ -202,12 +231,12 @@ class Game {
   }
 
   _step(now) {
-    if (!this.prevRenderTime) {
-      this.prevRenderTime = now;
+    if (!this.prevRenderTimeStamp) {
+      this.prevRenderTimeStamp = now;
       return this.stepOne(now, 1);
     }
 
-    if (now === this.prevRenderTime) {
+    if (now === this.prevRenderTimeStamp) {
       // A microsecond has not yet elapsed.
       // performance.now() may be a float with whole milliseconds but has a microsecond
       // the fractional portion too. See
@@ -216,17 +245,17 @@ class Game {
       // for fuzzing as described in the above docs.
       return false;
     }
-    if (now < this.prevRenderTime) {
-      // Sanity check. Was occuring previously when I was directly calling stepCB.
-      // See comment there.
+    if (now < this.prevRenderTimeStamp) {
+      // Sanity check. Was occuring previously when I was directly calling animate.
+      // See comment in init().
       throw new Error(
-        `time flew backwards? prevRenderTime: ${this.prevRenderTime} > now: ${now}`
+        `time flew backwards? prevRenderTimeStamp: ${this.prevRenderTimeStamp} > now: ${now}`
       );
     }
 
     let interpol = 1;
     for (
-      let i = this.prevRenderTime + this.timeUnitVelocity;
+      let i = this.prevRenderTimeStamp + this.timeUnitVelocity;
       i < now + this.timeUnitVelocity;
       i += this.timeUnitVelocity
     ) {
@@ -258,7 +287,7 @@ class Game {
         return gameOver;
       }
     }
-    this.prevRenderTime = now;
+    this.prevRenderTimeStamp = now;
     return false;
   }
 
@@ -355,7 +384,7 @@ class Game {
     }
   }
 
-  // https://stackoverflow.com/a/402019
+  // https://stackoverflow.com/a/21096179/4283659
   detectBirdCollisions() {
     if (
       !(
