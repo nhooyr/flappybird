@@ -1,29 +1,22 @@
 "use strict";
 
 function init() {
-  console.info(`Help:
-- Press right arrow for next slide.
-- Press left arrow for previous slide.
-- Click for next slide.
-- Right click for previous slide.
-- Tap for next slide.
-- Two finger tap for previous slide.`);
-
   initQuerySlideIndex();
   addEventListeners();
 }
 
 function initQuerySlideIndex() {
+  const slidesContainerEl = document.getElementById("slides-container");
   const url = new URL(location.href);
   if (url.searchParams.get("slide")) {
     let slideIndex = parseInt(url.searchParams.get("slide")) - 1;
     if (slideIndex < 0) {
       slideIndex = 0;
-    } else if (slideIndex > document.body.children.length - 1) {
-      slideIndex = document.body.children.length - 1;
+    } else if (slideIndex > slidesContainerEl.children.length - 1) {
+      slideIndex = slidesContainerEl.children.length - 1;
     }
-    hideSlide(document.body.children[0]);
-    showSlide(document.body.children[slideIndex]);
+    hideSlide(slidesContainerEl.children[0]);
+    showSlide(slidesContainerEl.children[slideIndex]);
   } else {
     replaceQuerySlideIndex(1);
   }
@@ -51,7 +44,10 @@ function prev() {
 
 function showSlide(slide) {
   slide.classList.add("slide-visible");
-  setQuerySlideIndex(getElementIndex(slide));
+  const slideN = getElementIndex(slide);
+  setQuerySlideIndex(slideN);
+  const slideNEL = document.getElementById("slide-n");
+  slideNEL.textContent = `${slideN}`;
 }
 
 function hideSlide(slide) {
@@ -77,30 +73,44 @@ function getElementIndex(el) {
   while ((el = el.previousElementSibling)) {
     index++;
   }
-  console.info(index);
   return index + 1;
 }
 
 function addEventListeners() {
   document.addEventListener("keydown", e => {
     if (e.key === "ArrowRight") {
+      hideHelp();
       next();
     } else if (e.key === "ArrowLeft") {
+      hideHelp();
       prev();
+    } else if (e.key === "?") {
+      toggleHelp();
     }
   });
 
   document.addEventListener("click", () => {
+    hideHelp();
     next();
   });
 
   let doubleTouch;
+  let tripleTouch;
   document.addEventListener("touchstart", e => {
-    doubleTouch = e.touches.length > 1;
+    if (e.touches.length > 2) {
+      tripleTouch = true;
+    } else if (e.touches.length > 1) {
+      doubleTouch = true;
+    }
   });
 
   document.addEventListener("touchend", e => {
-    if (doubleTouch) {
+    if (tripleTouch) {
+      toggleHelp();
+      tripleTouch = false;
+      doubleTouch = false;
+    } else if (doubleTouch) {
+      hideHelp();
       prev();
       doubleTouch = false;
     }
@@ -108,8 +118,23 @@ function addEventListeners() {
 
   document.addEventListener("contextmenu", e => {
     e.preventDefault();
+    hideHelp();
     prev();
   });
+}
+
+function hideHelp() {
+  const helpEl = document.getElementById("help");
+  helpEl.style.display = "none";
+}
+
+function toggleHelp() {
+  const helpEl = document.getElementById("help");
+  if (helpEl.style.display === "none") {
+    helpEl.style.display = "revert";
+  } else {
+    helpEl.style.display = "none";
+  }
 }
 
 init();

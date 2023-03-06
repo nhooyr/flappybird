@@ -49,8 +49,6 @@ above but rather incomplete.
 The presentation is in [./pres](./pres) and accessible at
 https://nhooyr.github.io/flappybird/pres/.
 
-See the help log in the console for how to navigate between the slides.
-
 <a href="https://nhooyr.github.io/flappybird/pres/" >
   <!-- kbd is for adding a border around the preview. -->
   <kbd>

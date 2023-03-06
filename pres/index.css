@@ -5,11 +5,14 @@ html {
 body {
   height: 100%;
   margin: 0;
+  background: black;
+}
+
+#slides-container {
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  background: black;
 }
 
 .slide {
@@ -20,4 +23,17 @@ body {
 
 .slide-visible {
   display: block;
+}
+
+#help {
+  background: white;
+  padding: 10px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  border: 2px solid Black;
+}
+
+#help pre {
+  margin: 0;
 }

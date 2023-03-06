@@ -44,7 +44,7 @@ class Game {
       birdFlapForce: -4,
       pipeVelocityX: 2,
     };
-    this.state = {}
+    this.state = {};
 
     const highScore = localStorage.getItem("flappybird-high-score");
     if (highScore) {
@@ -77,7 +77,7 @@ class Game {
 
   // TODO: set prevRenderState too.
   readInitialState() {
-    const pipeElements = this.document.querySelectorAll(".pipe")
+    const pipeElements = this.document.querySelectorAll(".pipe");
 
     this.initialState = {
       bird: {
@@ -87,21 +87,25 @@ class Game {
       pipes: [],
     };
     for (let i = 0; i < pipeElements.length; i += 2) {
-      const roofEl = pipeElements[i]
-      const floorEl = pipeElements[i+1]
+      const roofEl = pipeElements[i];
+      const floorEl = pipeElements[i + 1];
       this.initialState.pipes.push({
         left: roofEl.offsetLeft,
         roofHeight: roofEl.offsetHeight,
         floorHeight: floorEl.offsetHeight,
         width: roofEl.offsetWidth,
         scored: roofEl.offsetLeft + roofEl.offsetWidth < this.birdEl.offsetLeft,
-      })
+      });
     }
 
     this.initialState.pipeGapHeight =
-      this.skyEl.scrollHeight - pipeElements[0].offsetHeight - pipeElements[1].offsetHeight;
+      this.skyEl.scrollHeight -
+      pipeElements[0].offsetHeight -
+      pipeElements[1].offsetHeight;
     this.initialState.pipeIntervalWidth =
-      pipeElements[2].offsetLeft - pipeElements[0].offsetLeft - pipeElements[0].offsetWidth;
+      pipeElements[2].offsetLeft -
+      pipeElements[0].offsetLeft -
+      pipeElements[0].offsetWidth;
   }
 
   render() {
