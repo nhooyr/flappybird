@@ -78,20 +78,37 @@ function getElementIndex(el) {
 
 function addEventListeners() {
   document.addEventListener("keydown", e => {
-    if (e.key === "ArrowRight") {
-      hideHelp();
-      next();
-    } else if (e.key === "ArrowLeft") {
-      hideHelp();
-      prev();
-    } else if (e.key === "?") {
-      toggleHelp();
+    console.info(e.key)
+    switch (e.key) {
+      case "Enter":
+      case " ":
+      case "Tab":
+      case "ArrowRight":
+          e.preventDefault()
+          if (!hideHelp()) {
+            next();
+          }
+          break;
+      case "ShiftTab":
+      case "ArrowLeft":
+          e.preventDefault()
+          if (!hideHelp()) {
+            prev();
+          }
+          break;
+      case "?":
+        toggleHelp();
+        break;
+      case "Escape":
+        hideHelp();
+        break;
     }
   });
 
   document.addEventListener("click", () => {
-    hideHelp();
-    next();
+    if (!hideHelp()) {
+      next();
+    }
   });
 
   let doubleTouch;
@@ -110,22 +127,28 @@ function addEventListeners() {
       tripleTouch = false;
       doubleTouch = false;
     } else if (doubleTouch) {
-      hideHelp();
-      prev();
+      if (!hideHelp()) {
+        prev();
+      }
       doubleTouch = false;
     }
   });
 
   document.addEventListener("contextmenu", e => {
     e.preventDefault();
-    hideHelp();
-    prev();
+    if (!hideHelp()) {
+      prev();
+    }
   });
 }
 
 function hideHelp() {
   const helpEl = document.getElementById("help");
+  if (helpEl.style.display === "none") {
+    return false;
+  }
   helpEl.style.display = "none";
+  return true;
 }
 
 function toggleHelp() {
