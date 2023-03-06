@@ -31,9 +31,12 @@ body {
   position: absolute;
   bottom: 20px;
   left: 20px;
-  border: 2px solid Black;
+  border: 3px solid Black;
 }
 
 #help pre {
   margin: 0;
+  font-family: sans-serif;
+  font-size: 11pt;
+  line-height: 1.5;
 }
