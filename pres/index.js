@@ -78,24 +78,23 @@ function getElementIndex(el) {
 
 function addEventListeners() {
   document.addEventListener("keydown", e => {
-    console.info(e.key)
     switch (e.key) {
       case "Enter":
       case " ":
       case "Tab":
       case "ArrowRight":
-          e.preventDefault()
-          if (!hideHelp()) {
-            next();
-          }
-          break;
+        e.preventDefault();
+        if (!hideHelp()) {
+          next();
+        }
+        break;
       case "ShiftTab":
       case "ArrowLeft":
-          e.preventDefault()
-          if (!hideHelp()) {
-            prev();
-          }
-          break;
+        e.preventDefault();
+        if (!hideHelp()) {
+          prev();
+        }
+        break;
       case "?":
         toggleHelp();
         break;
