@@ -98,6 +98,13 @@ function addEventListeners() {
       case "?":
         toggleHelp();
         break;
+      case "f":
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        } else {
+          document.body.requestFullscreen();
+        }
+        break;
       case "Escape":
         hideHelp();
         break;
