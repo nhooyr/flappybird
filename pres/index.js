@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 (function () {
-  const slidesContainerEl = document.getElementById('slides-container');
-  const helpEl = document.getElementById('help');
-  const slideNEL = document.getElementById('slide-n');
+  const slidesContainerEl = document.getElementById("slides-container");
+  const helpEl = document.getElementById("help");
+  const slideNEL = document.getElementById("slide-n");
   function init() {
     initQuerySlideIndex();
     addEventListeners();
@@ -10,8 +10,8 @@
 
   function initQuerySlideIndex() {
     const url = new URL(location.href);
-    if (url.searchParams.get('slide')) {
-      let slideIndex = parseInt(url.searchParams.get('slide')) - 1;
+    if (url.searchParams.get("slide")) {
+      let slideIndex = parseInt(url.searchParams.get("slide")) - 1;
       if (slideIndex < 0) {
         slideIndex = 0;
       } else if (slideIndex > slidesContainerEl.children.length - 1) {
@@ -25,47 +25,51 @@
   }
 
   function next() {
-    const visibleSlide = document.querySelector('.slide-visible');
-    hideSlide(visibleSlide);
-    if (visibleSlide.nextElementSibling) {
-      showSlide(visibleSlide.nextElementSibling);
+    const topSlide = document.querySelector(".slide-top");
+    hideSlide(topSlide);
+    if (topSlide.nextElementSibling) {
+      showSlide(topSlide.nextElementSibling);
     } else {
-      showSlide(visibleSlide.parentElement.firstElementChild);
+      showSlide(topSlide.parentElement.firstElementChild);
     }
   }
 
   function prev() {
-    const visibleSlide = document.querySelector('.slide-visible');
-    hideSlide(visibleSlide);
-    if (visibleSlide.previousElementSibling) {
-      showSlide(visibleSlide.previousElementSibling);
+    const topSlide = document.querySelector(".slide-top");
+    hideSlide(topSlide);
+    if (topSlide.previousElementSibling) {
+      showSlide(topSlide.previousElementSibling);
     } else {
-      showSlide(visibleSlide.parentElement.lastElementChild);
+      showSlide(topSlide.parentElement.lastElementChild);
     }
   }
 
   function showSlide(slide) {
-    slide.classList.add('slide-visible');
+    slide.classList.add("slide-visible", "slide-top");
     const slideN = getElementIndex(slide);
     setQuerySlideIndex(slideN);
     slideNEL.textContent = `${slideN}`;
   }
 
   function hideSlide(slide) {
-    slide.classList.remove('slide-visible');
+    const prevSlide = document.querySelector(".slide-visible:not(.slide-top)");
+    if (prevSlide) {
+      prevSlide.classList.remove("slide-visible");
+    }
+    slide.classList.remove("slide-top");
   }
 
   function setQuerySlideIndex(index) {
     const url = new URL(location.href);
-    url.searchParams.set('slide', index);
-    history.pushState({}, '', url);
+    url.searchParams.set("slide", index);
+    history.pushState({}, "", url);
   }
 
   function replaceQuerySlideIndex(index) {
     const url = new URL(location.href);
-    if (url.searchParams.get('slide') !== `${index}`) {
-      url.searchParams.set('slide', index);
-      history.replaceState({}, '', url);
+    if (url.searchParams.get("slide") !== `${index}`) {
+      url.searchParams.set("slide", index);
+      history.replaceState({}, "", url);
     }
   }
 
@@ -78,41 +82,41 @@
   }
 
   function addEventListeners() {
-    document.addEventListener('keydown', e => {
+    document.addEventListener("keydown", e => {
       switch (e.key) {
-        case 'Enter':
-        case ' ':
-        case 'Tab':
-        case 'ArrowRight':
+        case "Enter":
+        case " ":
+        case "Tab":
+        case "ArrowRight":
           e.preventDefault();
           if (!hideHelp()) {
             next();
           }
           break;
-        case 'ShiftTab':
-        case 'ArrowLeft':
+        case "ShiftTab":
+        case "ArrowLeft":
           e.preventDefault();
           if (!hideHelp()) {
             prev();
           }
           break;
-        case '?':
+        case "?":
           toggleHelp();
           break;
-        case 'f':
+        case "f":
           if (document.fullscreenElement) {
             document.exitFullscreen();
           } else {
             document.body.requestFullscreen();
           }
           break;
-        case 'Escape':
+        case "Escape":
           hideHelp();
           break;
       }
     });
 
-    document.addEventListener('click', e => {
+    document.addEventListener("click", e => {
       if (!helpEl.contains(e.target))
         if (!hideHelp()) {
           next();
@@ -121,7 +125,7 @@
 
     let doubleTouch;
     let tripleTouch;
-    document.addEventListener('touchstart', e => {
+    document.addEventListener("touchstart", e => {
       if (e.touches.length > 2) {
         tripleTouch = true;
       } else if (e.touches.length > 1) {
@@ -129,7 +133,7 @@
       }
     });
 
-    document.addEventListener('touchend', e => {
+    document.addEventListener("touchend", e => {
       if (tripleTouch) {
         toggleHelp();
         tripleTouch = false;
@@ -142,7 +146,7 @@
       }
     });
 
-    document.addEventListener('contextmenu', e => {
+    document.addEventListener("contextmenu", e => {
       if (document.fullscreenElement) {
         e.preventDefault();
         if (!hideHelp()) {
@@ -153,18 +157,18 @@
   }
 
   function hideHelp() {
-    if (helpEl.style.display === 'none') {
+    if (helpEl.style.display === "none") {
       return false;
     }
-    helpEl.style.display = 'none';
+    helpEl.style.display = "none";
     return true;
   }
 
   function toggleHelp() {
-    if (helpEl.style.display === 'none') {
-      helpEl.style.display = 'revert';
+    if (helpEl.style.display === "none") {
+      helpEl.style.display = "revert";
     } else {
-      helpEl.style.display = 'none';
+      helpEl.style.display = "none";
     }
   }
 
