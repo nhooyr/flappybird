@@ -25,38 +25,34 @@
   }
 
   function next() {
-    const topSlide = document.querySelector(".slide-top");
-    hideSlide(topSlide);
-    if (topSlide.nextElementSibling) {
-      showSlide(topSlide.nextElementSibling);
+    const visibleSlide = document.querySelector(".slide-visible");
+    hideSlide(visibleSlide);
+    if (visibleSlide.nextElementSibling) {
+      showSlide(visibleSlide.nextElementSibling);
     } else {
-      showSlide(topSlide.parentElement.firstElementChild);
+      showSlide(visibleSlide.parentElement.firstElementChild);
     }
   }
 
   function prev() {
-    const topSlide = document.querySelector(".slide-top");
-    hideSlide(topSlide);
-    if (topSlide.previousElementSibling) {
-      showSlide(topSlide.previousElementSibling);
+    const visibleSlide = document.querySelector(".slide-visible");
+    hideSlide(visibleSlide);
+    if (visibleSlide.previousElementSibling) {
+      showSlide(visibleSlide.previousElementSibling);
     } else {
-      showSlide(topSlide.parentElement.lastElementChild);
+      showSlide(visibleSlide.parentElement.lastElementChild);
     }
   }
 
   function showSlide(slide) {
-    slide.classList.add("slide-visible", "slide-top");
+    slide.classList.add("slide-visible");
     const slideN = getElementIndex(slide);
     setQuerySlideIndex(slideN);
     slideNEL.textContent = `${slideN}`;
   }
 
   function hideSlide(slide) {
-    const prevSlide = document.querySelector(".slide-visible:not(.slide-top)");
-    if (prevSlide) {
-      prevSlide.classList.remove("slide-visible");
-    }
-    slide.classList.remove("slide-top");
+    slide.classList.remove("slide-visible");
   }
 
   function setQuerySlideIndex(index) {
