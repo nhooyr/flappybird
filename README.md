@@ -2,9 +2,9 @@
 
 https://nhooyr.github.io/flappybird/
 
-I wrote this minimal demo game for a short presentation I gave at the
-[Kaslo](https://en.wikipedia.org/wiki/Kaslo), BC [highschool](https://jvh.sd8.bc.ca/) to
-freshmen and sophmores in early 2023 on how HTML, CSS and JavaScript integrate together.
+I wrote this minimal demo game for a short presentation I gave at the [Kaslo,
+BC](https://en.wikipedia.org/wiki/Kaslo) [highschool](https://jvh.sd8.bc.ca/) to 10th
+graders in April 2023 on how HTML, CSS and JavaScript integrate together.
 
 > \*warning\*: This game is deathly addictive. Play at your own peril.
 
