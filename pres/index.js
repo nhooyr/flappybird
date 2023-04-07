@@ -115,7 +115,10 @@
     document.addEventListener("click", e => {
       if (!helpEl.contains(e.target))
         if (!hideHelp()) {
-          if (slidesContainerEl.clientWidth*0.20 >= e.clientX) {
+          if (
+            slidesContainerEl.clientLeft + slidesContainerEl.clientWidth * 0.2 >=
+            e.clientX
+          ) {
             // Clicks on left 20% mean go back.
             prev();
           } else {
