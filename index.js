@@ -163,11 +163,6 @@ class Game {
     // Register ArrowUp to substitute for Enter.
     this.document.addEventListener("keydown", e => {
       switch (e.key) {
-        case "Escape":
-          if (help.open) {
-            this.helpButtonEl.click();
-          }
-          break;
         case " ":
         case "ArrowUp":
         case "Enter":
@@ -175,6 +170,21 @@ class Game {
             return;
           }
           this.handleFlapInput();
+          break;
+        case "?":
+          this.helpButtonEl.click();
+          break;
+        case "f":
+          if (this.document.fullscreenElement) {
+            this.document.exitFullscreen();
+          } else {
+            this.document.body.requestFullscreen();
+          }
+          break;
+        case "Escape":
+          if (help.open) {
+            this.helpButtonEl.click();
+          }
           break;
       }
     });
