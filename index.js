@@ -4,12 +4,6 @@ function init() {
   const g = new Game(window.document, window.localStorage);
   g.readInitialState();
   g.addEventListeners();
-  // TODO: wrong only animate when g.alive = true
-  // We do not call animate directly here with performance.now() as we need now to be
-  // guaranteed to be moving forward. requestAnimationFrame caches now for the frame and
-  // so if you call animate here directly then the requestAnimationFrame in animate will
-  // almost immediately get called back with an older cached now.
-  requestAnimationFrame(g.animate.bind(g));
 }
 
 class Game {
@@ -20,7 +14,7 @@ class Game {
     this.document = document;
 
     this.helpEl = this.document.getElementById("help");
-    this.helpButtonEl = help.children[0];
+    this.helpButtonEl = this.helpEl.children[0];
 
     this.promptEl = this.document.getElementById("prompt");
     this.skyEl = this.document.getElementById("sky");
@@ -216,6 +210,14 @@ class Game {
       game.birdFlapWingsInput();
       return;
     }
+  }
+
+  loop() {
+    // We do not call animate directly here with performance.now() as we need now to be
+    // guaranteed to be moving forward. requestAnimationFrame caches now for the frame and
+    // so if you call animate here directly then the requestAnimationFrame in animate will
+    // almost immediately get called back with an older cached now.
+    requestAnimationFrame(g.animate.bind(g));
   }
 
   animate() {
