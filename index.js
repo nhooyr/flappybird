@@ -10,8 +10,8 @@ class Game {
   // Many of the fields defined here could be static but I kept them as instance fields
   // to allow students to adjust game attributes on different levels.
   constructor(document, localStorage) {
-    this.alive = false;
     this.document = document;
+    this.localStorage = localStorage;
 
     this.helpEl = this.document.getElementById("help");
     this.helpButtonEl = this.helpEl.children[0];
@@ -26,9 +26,6 @@ class Game {
     this.fpsMeterEl = this.document.getElementById("fps-meter");
     this.fpsEl = this.document.getElementById("fps-meter-n");
 
-    this.renderState = {};
-    this.prevRenderState = {};
-
     // See readInitialState for full structure.
     this.initialState = {
       birdVelocityY: 0,
@@ -39,17 +36,18 @@ class Game {
       pipeVelocityX: 2,
     };
     this.state = {};
+    this.prevState = {};
 
-    const highScore = localStorage.getItem("flappybird-high-score");
+    const highScore = this.localStorage.getItem("flappybird-high-score");
     if (highScore) {
       this.state.highScore = highScore;
       this.highScoreEl.textContent = `${highScore}`.padStart(3, "0");
     } else {
       this.state.highScore = 0;
-      localStorage.setItem("flappybird-high-score", this.state.highScore);
+      this.localStorage.setItem("flappybird-high-score", this.state.highScore);
     }
 
-    this.state.prompt = promptEl.textContent;
+    this.state.prompt = this.promptEl.textContent;
 
     // timeUnitVelocity evalutes to about 16.67 milliseconds. And so about 60 time units
     // fit into a second. A time unit is the maximum duration after which a collision is
@@ -69,7 +67,7 @@ class Game {
     this.prevRenderTimeStamp = undefined;
   }
 
-  // TODO: set prevRenderState too.
+  // TODO: set prevState too.
   readInitialState() {
     const pipeElements = this.document.querySelectorAll(".pipe");
 
@@ -163,7 +161,7 @@ class Game {
           if (help.contains(this.document.activeElement)) {
             return;
           }
-          this.handleFlapInput();
+          this.birdFlapWingsInput();
           break;
         case "?":
           this.helpButtonEl.click();
@@ -201,15 +199,8 @@ class Game {
         return;
       }
 
-      this.handleFlapInput();
+      this.birdFlapWingsInput();
     });
-  }
-
-  handleFlapInput() {
-    if (game) {
-      game.birdFlapWingsInput();
-      return;
-    }
   }
 
   loop() {
@@ -217,26 +208,28 @@ class Game {
     // guaranteed to be moving forward. requestAnimationFrame caches now for the frame and
     // so if you call animate here directly then the requestAnimationFrame in animate will
     // almost immediately get called back with an older cached now.
-    requestAnimationFrame(g.animate.bind(g));
+      g.animate.bind(g)
+    const cb = (now) => {
+      if (!this.animate(now)) {
+        requestAnimationFrame(cb);
+      }
+    }
+    requestAnimationFrame(cb);
   }
 
   animate() {
-    const gameOver = game.step(now);
-    game.render();
-    if (highScore < game.score) {
-      localStorage.setItem("flappybird-high-score", game.score);
+    const gameOver = this.step(now);
+    this.render();
+    if (this.highScore < this.score) {
+      localStorage.setItem("flappybird-high-score", this.score);
     }
-    if (gameOver) {
-      game = undefined;
-      return;
-    }
-    requestAnimationFrame(this.animate.bind(this));
+    return gameOver;
   }
 
   step(now) {
     const gameOver = this._step(now);
     if (gameOver) {
-      this.displayGameOverPrompt();
+      this.state.prompt = "Game Over! Press enter or tap to play again.";
       return true;
     }
     while (this.fpsa.length && now - this.fpsa[0].ts > this.fpsaThreshold) {
@@ -426,11 +419,6 @@ class Game {
       return true;
     }
     return false;
-  }
-
-  displayGameOverPrompt() {
-    this.prompt.style.display = "block";
-    this.prompt.textContent = "Game Over! Press enter or tap to play again.";
   }
 
   fps() {
